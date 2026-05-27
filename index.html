@@ -276,6 +276,7 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 <body>
 
 <div id="app">
+  <!-- HEADER -->
   <div id="hd">
     <div class="hd-row">
       <div style="flex:1;min-width:0">
@@ -292,8 +293,10 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     </div>
   </div>
 
+  <!-- SCROLL AREA -->
   <div id="scroll">
-    <div class="tab var on" id="tab-list">
+    <!-- TAB: DANH SÁCH -->
+    <div class="tab on" id="tab-list">
       <div class="ps" id="periodStrip"></div>
       <div class="sum">
         <div>
@@ -311,13 +314,14 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
       <div class="sp"></div>
     </div>
 
-    <div class="tab var" id="tab-tax">
+    <!-- TAB: LỊCH THUẾ -->
+    <div class="tab" id="tab-tax">
       <div class="nhom-card">
         <div class="nhom-badge">NHÓM 1</div>
         <div class="nhom-info">
           <div class="nhom-dt">Doanh thu ≤ 1 tỷ/năm • Quy mô: Nhỏ</div>
           <div class="nhom-grid">
-            <div class="nhom-item"><span class="nhom-label">Thuế</span><span class="nhom-val green">GTGT: Miễn<br>TNCN: Miễn</span></div>
+            <div class="nhom-item"><span class="nhom-label">Thuế</span><span class="nhom-val green">GTG: Miễn<br>TNCN: Miễn</span></div>
             <div class="nhom-item"><span class="nhom-label">Sổ sách</span><span class="nhom-val">S1a-HKD<br>Ghi chép đơn giản</span></div>
             <div class="nhom-item"><span class="nhom-label">Hóa đơn</span><span class="nhom-val orange">Không bắt buộc</span></div>
             <div class="nhom-item"><span class="nhom-label">Kê khai</span><span class="nhom-val blue" id="nhomKeKhai">1 lần/năm<br>Hạn: 31/1</span></div>
@@ -361,16 +365,17 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
         </div>
       </div>
       <div class="card">
-        <div class="card-t">🔔 Tạo thông báo nhắc thuế</div>
+        <div class="card-t">📋 Tạo thông báo nhắc thuế</div>
         <p style="font-size:12px;color:var(--sub);margin-bottom:12px;line-height:1.55">Tạo nội dung nhắc nộp thuế để gửi qua Zalo / tin nhắn</p>
         <div class="notif-box" id="notifBox" style="display:none"></div>
-        <button class="btn btn-b" onclick="genNoti()">🔔 Tạo thông báo</button>
-        <button class="btn btn-g" id="copyBtn" style="display:none" onclick="copyNoti()">📋 Sao chép thông báo</button>
+        <button class="btn btn-b" onclick="genNotif()">📋 Tạo thông báo</button>
+        <button class="btn btn-g" id="copyBtn" style="display:none" onclick="copyNotif()">📋 Sao chép thông báo</button>
       </div>
       <div class="sp"></div>
     </div>
 
-    <div class="tab var" id="tab-exp">
+    <!-- TAB: XUẤT FILE -->
+    <div class="tab" id="tab-exp">
       <div class="card" style="text-align:center">
         <div style="font-size:42px;margin-bottom:8px">🖨️</div>
         <div style="font-size:15px;font-weight:800;margin-bottom:5px">In mẫu S1a-HKD</div>
@@ -379,7 +384,7 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
         <button class="btn btn-r" onclick="doPrint()">🖨️ Xem &amp; In</button>
       </div>
       <div class="card">
-        <div class="card-t">💡 Hướng dẫn in trên điện thoại</div>
+        <div class="card-t">📋 Hướng dẫn in trên iPhone</div>
         <p style="font-size:12.5px;color:var(--sub);line-height:1.8">
           1. Nhấn <strong style="color:var(--red)">Xem &amp; In</strong><br>
           2. Nhấn nút <strong>🖨️ In ngay</strong><br>
@@ -390,9 +395,10 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
       <div class="sp"></div>
     </div>
 
-    <div class="tab var" id="tab-cfg">
+    <!-- TAB: CÀI ĐẶT -->
+    <div class="tab" id="tab-cfg">
       <div class="card">
-        <div class="card-t">📍 Thông tin hộ kinh doanh</div>
+        <div class="card-t">📋 Thông tin hộ kinh doanh</div>
         <div class="fg"><label class="fl">Tên hộ / cá nhân kinh doanh</label><input class="fi" id="cfgName" type="text" placeholder="Nhập tên..."></div>
         <div class="fg"><label class="fl">Địa chỉ</label><input class="fi" id="cfgAddr" type="text" placeholder="Nhập địa chỉ..."></div>
         <div class="fg"><label class="fl">Mã số thuế</label><input class="fi" id="cfgTax" type="text" inputmode="numeric" placeholder="0123456789"></div>
@@ -409,69 +415,70 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
       <div class="card">
         <div class="card-t">⚙️ Dữ liệu</div>
         <div class="import-zone" onclick="importFile()">
-          📁 <strong>Nhập dữ liệu từ file JSON</strong><br>
+          📋 <strong>Nhập dữ liệu từ file JSON</strong><br>
           <span style="font-size:11px;margin-top:4px;display:block">Chạm để chọn file sao lưu (.json)</span>
         </div>
         <button class="btn btn-g" onclick="exportJSON()">📤 Xuất file sao lưu (JSON)</button>
         <button class="btn btn-danger" onclick="clearAll()">🗑️ Xóa toàn bộ dữ liệu</button>
-        <p style="font-size:11px;color:var(--sub);margin-top:10px;line-height:1.6;text-align:center">💡 Dữ liệu tự lưu vào trình duyệt.<br>Xuất JSON định kỳ để sao lưu an toàn.</p>
+        <p style="font-size:11px;color:var(--sub);margin-top:10px;line-height:1.6;text-align:center">📋 Dữ liệu tự lưu vào trình duyệt.<br>Xuất JSON định kỳ để sao lưu an toàn.</p>
       </div>
       <div class="sp"></div>
     </div>
   </div>
 
+  <!-- BOTTOM NAV BAR -->
   <div id="bnav">
-    <button class="ni on" onclick="switchTab('list', this)">
-      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-linecap="round"/></svg>Danh sách
+    <button class="ni on" data-tab="list" onclick="switchTab('list', this)">
+      <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>Danh sách
     </button>
-    <button class="ni" onclick="switchTab('tax', this)">
-      <svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Lịch Thuế
+    <button class="ni" data-tab="tax" onclick="switchTab('tax', this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Lịch thuế
     </button>
-    <button class="ni" onclick="switchTab('exp', this)">
-      <svg viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Xuất File
+    <button class="ni" data-tab="exp" onclick="switchTab('exp', this)">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>Xuất file
     </button>
-    <button class="ni" onclick="switchTab('cfg', this)">
-      <svg viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor"/></svg>Cài đặt
+    <button class="ni" data-tab="cfg" onclick="switchTab('cfg', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Cài đặt
     </button>
   </div>
-
-  <button id="fab" onclick="openAddModal()">+</button>
 </div>
 
+<!-- DAILY POPUP -->
+<div id="dailyPopup">
+  <div class="dp-box">
+    <div class="dp-emoji" id="dpEmoji">📈</div>
+    <div class="dp-title">Chào mừng ngày mới</div>
+    <div class="dp-msg" id="dpMsg">Chúc bạn một ngày kinh doanh phát đạt!</div>
+    <div class="dp-sub" id="dpSub">📋 Sổ Doanh Thu S1a-HKD luôn đồng hành cùng bạn</div>
+    <button class="dp-btn" onclick="closeDailyPopup()">Cảm ơn! Bắt đầu thôi 🚀</button>
+  </div>
+</div>
+
+<!-- FAB -->
+<button id="fab" onclick="openAdd()">＋</button>
+
+<!-- MODAL: ADD / EDIT GIAO DỊCH -->
 <div id="modal">
   <div class="sheet">
     <div class="handle"></div>
-    <div class="mtitle" id="modalTitle">Thêm giao dịch mới</div>
+    <div class="mtitle" id="mTitle">📋 Thêm doanh thu</div>
     <input type="hidden" id="editIndex" value="">
-    <div class="fg"><label class="fl">Ngày giao dịch</label><input class="fi" type="date" id="fDate"></div>
-    <div class="fg"><label class="fl">Nội dung / Tên hàng hóa dịch vụ</label><input class="fi" type="text" id="fDesc" placeholder="Ví dụ: Bán quần áo, doanh thu ăn uống..."></div>
-    <div class="fg"><label class="fl">Số tiền doanh thu (đơn vị: đồng)</label><input class="fi" type="number" inputmode="numeric" id="fAmt" placeholder="0" oninput="previewAmt(this.value)"> <div class="amt-preview" id="fAmtPreview">0 ₫</div></div>
+    <div class="fg"><label class="fl">Ngày</label><input class="fi" id="eDate" type="date"></div>
+    <div class="fg"><label class="fl">Diễn giải</label><input class="fi" id="eDesc" type="text" placeholder="Mô tả giao dịch..."></div>
     <div class="fg">
-      <label class="fl">Nhóm ngành tính thuế</label>
-      <select class="fi" id="fCat">
-        <option value="1">1. Phân phối, cung cấp hàng hóa (GTGT 1%; TNCN 0.5%)</option>
-        <option value="2">2. Dịch vụ, xây dựng không bao thầu NVL (GTGT 5%; TNCN 2%)</option>
-        <option value="3">3. Sản xuất, vận tải, dịch vụ có gắn với hàng hóa (GTGT 3%; TNCN 1.5%)</option>
-        <option value="4">4. Hoạt động kinh doanh khác (GTGT 2%; TNCN 1%)</option>
-      </select>
+      <label class="fl">Số tiền (VNĐ)</label>
+      <input class="fi" id="eAmt" type="number" placeholder="0" inputmode="numeric" min="0" oninput="previewAmt(this.value)">
+      <div class="amt-preview" id="amtPrev"></div>
     </div>
-    <button class="btn btn-r" id="modalSubmitBtn" onclick="submitForm()">➕ Thêm giao dịch</button>
-    <button class="btn btn-g" onclick="closeModal()">Đóng</button>
+    <button class="btn btn-r" id="modalSubmitBtn" onclick="saveEntry()">📋 Lưu giao dịch</button>
+    <button class="btn btn-g" onclick="closeModal()">Hủy</button>
   </div>
 </div>
 
-<div id="dailyPopup">
-  <div class="dp-box">
-    <div class="dp-emoji">📈</div>
-    <div class="dp-title" id="dpTitle">Mẹo Doanh Thu</div>
-    <div class="dp-msg" id="dpMsg">Luôn ghi chép đầy đủ các giao dịch phát sinh hằng ngày để đối chiếu thuế chính xác nhất cuối năm!</div>
-    <div class="dp-sub">Sổ sách rõ ràng giúp bạn tối ưu chi phí thuế hợp pháp.</div>
-    <button class="dp-btn" onclick="closeDp()">Tuyệt vời</button>
-  </div>
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-<div class="toast" id="toast">Thông báo</div>
-
+<!-- PRINT OVERLAY -->
 <div id="printOverlay">
   <div id="printBar">
     <button class="pb-print" onclick="window.print()">🖨️ In ngay</button>
@@ -481,350 +488,334 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 </div>
 
 <script>
-// ─── DATA MANAGEMENT ───
-let db = { config: { name: "", addr: "", tax: "", loc: "", method: "old" }, entries: [] };
-let currentPeriod = "all";
-
-const catsInfo = {
-  "1": { name: "Phân phối, cung cấp hàng hóa", vat: "1%", pit: "0.5%" },
-  "2": { name: "Dịch vụ, xây dựng không bao thầu NVL", vat: "5%", pit: "2%" },
-  "3": { name: "Sản xuất, vận tải, dịch vụ có gắn với hàng hóa", vat: "3%", pit: "1.5%" },
-  "4": { name: "Hoạt động kinh doanh khác", vat: "2%", pit: "1%" }
+const S = {
+  cfg: { name:'', addr:'', tax:'', loc:'', method:'old' },
+  entries: [],
+  period: null,
+  editId: null
 };
+let notifText = '';
+
+const LS_KEY = 's1a_hkd_v1';
 
 window.onload = function() {
-  loadData();
+  load();
   initApp();
-  checkDailyPopup();
 };
 
-function loadData() {
-  let local = localStorage.getItem("s1a_hkd_db");
-  if(local) {
-    try { db = JSON.parse(local); if(!db.entries) db.entries = []; if(!db.config) db.config = {}; } catch(e) { showToast("Lỗi tải dữ liệu!"); }
-  }
-  updateHDStatus();
+function load() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(d.cfg) S.cfg = { ...S.cfg, ...d.cfg };
+    if(d.entries) S.entries = d.entries;
+    if(d.savedAt) _showSaveStatus(d.savedAt);
+  } catch(e) { console.error('load error', e); }
 }
 
-function saveData() {
-  const dot = document.getElementById("saveDot");
-  dot.classList.add("saving");
-  document.getElementById("saveStatus").innerText = "Đang lưu...";
-  
-  localStorage.setItem("s1a_hkd_db", JSON.stringify(db));
-  
-  setTimeout(() => {
-    dot.classList.remove("saving");
-    updateHDStatus();
-  }, 400);
+function persist() {
+  try {
+    const dot = document.getElementById('saveDot');
+    if(dot){ dot.classList.add('saving'); }
+    const data = { cfg: S.cfg, entries: S.entries, savedAt: new Date().toISOString() };
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+    setTimeout(() => {
+      const dot2 = document.getElementById('saveDot');
+      if(dot2) dot2.classList.remove('saving');
+      _showSaveStatus(data.savedAt);
+    }, 350);
+  } catch(e){
+    console.error(e);
+    toast('⚠ Không thể lưu dữ liệu!');
+  }
 }
 
-function updateHDStatus() {
-  const kk = document.getElementById("hdKK");
-  if(db.config.name) {
-    document.getElementById("hdSub").innerText = db.config.name;
-    kk.innerText = db.config.tax || "Đã thiết lập";
-  } else {
-    document.getElementById("hdSub").innerText = "Hộ kinh doanh / Cá nhân kinh doanh";
-    kk.innerText = "Chưa thiết lập";
-  }
-  
-  if(db.entries.length > 0) {
-    document.getElementById("saveStatus").innerText = `Đã lưu ${db.entries.length} giao dịch`;
-  } else {
-    document.getElementById("saveStatus").innerText = "Chưa có dữ liệu";
-  }
+function _showSaveStatus(iso) {
+  try {
+    const el = document.getElementById('saveStatus');
+    if(!el) return;
+    const d = new Date(iso);
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    el.textContent = '📋 Đã lưu tự động ' + d.getDate() + '/' + (d.getMonth()+1) + ' lúc ' + hh + ':' + mm;
+  } catch(_) {}
 }
 
 function initApp() {
-  // Điền dữ liệu cài đặt
-  document.getElementById("cfgName").value = db.config.name || "";
-  document.getElementById("cfgAddr").value = db.config.addr || "";
-  document.getElementById("cfgTax").value = db.config.tax || "";
-  document.getElementById("cfgLoc").value = db.config.loc || "";
-  document.getElementById("cfgMethod").value = db.config.method || "old";
-  
-  updateTaxTabUI();
+  fillCfgForm();
+  updateTaxUI();
   buildPeriodStrip();
-  renderList();
+  renderAll();
   buildPrintSelect();
+  checkDailyPopup();
 }
 
-function updateTaxTabUI() {
-  const m = db.config.method || "old";
-  if(m === "new") {
-    document.getElementById("nhomKeKhai").innerHTML = "2 lần/năm<br>Hạn: 31/7 &amp; 31/1";
-    document.getElementById("taxMethodLbl").innerText = "HKD mới thành lập trong năm — kê khai 2 lần";
-    document.getElementById("remind31_7").style.display = "flex";
+function checkDailyPopup() {
+  const pop = document.getElementById('dailyPopup');
+  if(!pop) return;
+  setTimeout(() => {
+    pop.classList.add('on');
+  }, 600);
+}
+function closeDailyPopup() {
+  const pop = document.getElementById('dailyPopup');
+  if(pop) pop.classList.remove('on');
+}
+
+function fillCfgForm() {
+  document.getElementById('cfgName').value = S.cfg.name || '';
+  document.getElementById('cfgAddr').value = S.cfg.addr || '';
+  document.getElementById('cfgTax').value = S.cfg.tax || '';
+  document.getElementById('cfgLoc').value = S.cfg.loc || '';
+  document.getElementById('cfgMethod').value = S.cfg.method || 'old';
+}
+
+function updateTaxUI() {
+  const m = S.cfg.method || 'old';
+  const label = document.getElementById('taxMethodLbl');
+  const r7 = document.getElementById('remind31_7');
+  if(m === 'new') {
+    if(label) label.textContent = 'HKD mới thành lập trong năm — kê khai 2 lần: 31/7 và 31/1';
+    if(r7) r7.style.display = 'flex';
   } else {
-    document.getElementById("nhomKeKhai").innerHTML = "1 lần/năm<br>Hạn: 31/1";
-    document.getElementById("taxMethodLbl").innerText = "HKD đã hoạt động — kê khai 1 lần/năm, hạn 31/1";
-    document.getElementById("remind31_7").style.display = "none";
+    if(label) label.textContent = 'HKD đã hoạt động — kê khai 1 lần/năm, hạn 31/1';
+    if(r7) r7.style.display = 'none';
   }
 }
 
-// ─── TABS ───
 function switchTab(tabId, btn) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("on"));
-  document.getElementById("tab-" + tabId).classList.add("on");
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('tab-' + tabId).classList.add('on');
   
-  document.querySelectorAll(".ni").forEach(n => n.classList.remove("on"));
-  btn.classList.add("on");
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
+  btn.classList.add('on');
   
-  const fab = document.getElementById("fab");
-  if(tabId === "list") fab.classList.remove("hide");
-  else fab.classList.add("hide");
-  
-  if(tabId === "list") renderList();
+  const fab = document.getElementById('fab');
+  if(tabId === 'list') {
+    if(fab) fab.classList.remove('hide');
+    renderAll();
+  } else {
+    if(fab) fab.classList.add('hide');
+  }
 }
 
-// ─── PERIOD STRIP ───
 function buildPeriodStrip() {
-  const strip = document.getElementById("periodStrip");
-  let months = [];
+  const strip = document.getElementById('periodStrip');
+  if(!strip) return;
   
-  db.entries.forEach(e => {
-    let m = e.date.substring(0, 7); // YYYY-MM
+  let months = [];
+  S.entries.forEach(e => {
+    let m = e.date.substring(0, 7);
     if(!months.includes(m)) months.push(m);
   });
+  months.sort((a,b) => b.localeCompare(a));
   
-  months.sort((a,b) => b.localeCompare(a)); // Mới nhất lên đầu
-  
-  let html = `<button class="pc ${currentPeriod==='all'?'on':''}" onclick="setPeriod('all')">Tất cả</button>`;
+  let html = `<button class="pc ${S.period===null?'on':''}" onclick="setPeriod(null)">Tất cả</button>`;
   months.forEach(m => {
-    let parts = m.split("-");
-    let lbl = `Tháng ${parts[1]}/${parts[0]}`;
-    html += `<button class="pc ${currentPeriod===m?'on':''}" onclick="setPeriod('${m}')">${lbl}</button>`;
+    let p = m.split('-');
+    html += `<button class="pc ${S.period===m?'on':''}" onclick="setPeriod('${m}')">Tháng ${p[1]}/${p[0]}</button>`;
   });
-  
   strip.innerHTML = html;
 }
 
 function setPeriod(p) {
-  currentPeriod = p;
-  document.querySelectorAll(".pc").forEach(b => b.classList.remove("on"));
+  S.period = p;
   buildPeriodStrip();
-  renderList();
+  renderAll();
 }
 
-// ─── RENDER LIST ───
-function renderList() {
-  const container = document.getElementById("entryList");
-  let filtered = [];
+function previewAmt(val) {
+  const p = document.getElementById('amtPrev');
+  if(p) p.textContent = val ? Number(val).toLocaleString('vi-VN') + ' ₫' : '';
+}
+
+function openAdd() {
+  document.getElementById('mTitle').textContent = '📋 Thêm doanh thu';
+  document.getElementById('modalSubmitBtn').textContent = '📋 Lưu giao dịch';
+  document.getElementById('editIndex').value = '';
   
-  if(currentPeriod === "all") {
-    filtered = [...db.entries];
-  } else {
-    filtered = db.entries.filter(e => e.date.startsWith(currentPeriod));
-  }
+  document.getElementById('eDate').value = new Date().toISOString().substring(0, 10);
+  document.getElementById('eDesc').value = '';
+  document.getElementById('eAmt').value = '';
+  document.getElementById('amtPrev').textContent = '';
   
-  // Sắp xếp ngày giảm dần
-  filtered.sort((a,b) => b.date.localeCompare(a.date));
+  document.getElementById('modal').classList.add('on');
+}
+
+function openEdit(realIdx) {
+  const entry = S.entries[realIdx];
+  if(!entry) return;
   
-  // Tính tổng
-  let total = 0;
-  filtered.forEach(e => total += Number(e.amt));
+  document.getElementById('mTitle').textContent = '✏️ Sửa giao dịch';
+  document.getElementById('modalSubmitBtn').textContent = '🔄 Cập nhật';
+  document.getElementById('editIndex').value = realIdx;
   
-  document.getElementById("sumTotal").innerText = fmtAmt(total);
-  document.getElementById("sumCount").innerText = `${filtered.length} giao dịch`;
-  document.getElementById("listBdg").innerText = filtered.length;
+  document.getElementById('eDate').value = entry.date;
+  document.getElementById('eDesc').value = entry.desc;
+  document.getElementById('eAmt').value = entry.amt;
+  previewAmt(entry.amt);
   
-  if(filtered.length === 0) {
-    container.innerHTML = `<div class="mt"><div class="mt-i">📭</div><div>Kỳ này chưa có giao dịch nào.<br>Bấm nút (+) ở góc phải để thêm!</div></div>`;
+  document.getElementById('modal').classList.add('on');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('on');
+}
+
+function saveEntry() {
+  const date = document.getElementById('eDate').value;
+  const desc = document.getElementById('eDesc').value.trim();
+  const amt = document.getElementById('eAmt').value;
+  const editIdx = document.getElementById('editIndex').value;
+  
+  if(!date || !desc || !amt) {
+    toast('⚠ Vui lòng nhập đủ thông tin!');
     return;
   }
   
-  let html = "";
-  filtered.forEach((e, idx) => {
-    let dParts = e.date.split("-");
-    let day = dParts[2] || "01";
-    let mon = dParts[1] ? `T${dParts[1]}` : "";
+  if(editIdx === '') {
+    // Thêm mới
+    S.entries.push({
+      id: 'e_' + Date.now() + '_' + Math.random().toString(36).substr(2,4),
+      date: date,
+      desc: desc,
+      amt: Number(amt)
+    });
+    toast('✓ Đã thêm giao dịch');
+  } else {
+    // Chỉnh sửa (Edit)
+    let idx = Number(editIdx);
+    if(S.entries[idx]) {
+      S.entries[idx].date = date;
+      S.entries[idx].desc = desc;
+      S.entries[idx].amt = Number(amt);
+      toast('✓ Đã cập nhật giao dịch');
+    }
+  }
+  
+  persist();
+  closeModal();
+  buildPeriodStrip();
+  renderAll();
+  buildPrintSelect();
+}
+
+function delEntry(realIdx) {
+  if(confirm('Bạn có chắc chắn muốn xóa giao dịch này?')) {
+    S.entries.splice(realIdx, 1);
+    toast('✓ Đã xóa giao dịch');
+    persist();
+    buildPeriodStrip();
+    renderAll();
+    buildPrintSelect();
+  }
+}
+
+function renderAll() {
+  const list = document.getElementById('entryList');
+  if(!list) return;
+  
+  let filtered = S.period ? S.entries.filter(e => e.date.startsWith(S.period)) : [...S.entries];
+  filtered.sort((a,b) => b.date.localeCompare(a.date));
+  
+  let total = 0;
+  filtered.forEach(e => total += e.amt);
+  
+  document.getElementById('sumTotal').textContent = total.toLocaleString('vi-VN') + ' ₫';
+  document.getElementById('sumCount').textContent = filtered.length + ' giao dịch';
+  document.getElementById('listBdg').textContent = filtered.length;
+  
+  if(filtered.length === 0) {
+    list.innerHTML = `<div class="mt"><div class="mt-i">📭</div><div>Kỳ này chưa có giao dịch nào.<br>Bấm nút (+) ở góc phải để thêm!</div></div>`;
+    return;
+  }
+  
+  let html = '';
+  filtered.forEach(e => {
+    let p = e.date.split('-');
+    let day = p[2] || '01';
+    let mon = p[1] ? 'T' + p[1] : '';
     
-    // Tìm index thực tế của item trong mảng db.entries để thực hiện xóa/sửa
-    let realIdx = db.entries.findIndex(r => r.id === e.id);
-    if (realIdx === -1) realIdx = idx; // Dự phòng
+    // Tìm index gốc của phần tử trong mảng chính S.entries
+    let realIdx = S.entries.findIndex(r => r.id === e.id);
+    if(realIdx === -1) return;
     
     html += `
     <div class="ec">
       <div class="db">${day}<div class="dm">${mon}</div></div>
       <div class="ei">
         <div class="edesc">${e.desc}</div>
-        <div class="eamt">+${fmtAmt(e.amt)}</div>
+        <div class="eamt">+${e.amt.toLocaleString('vi-VN')} ₫</div>
       </div>
       <div class="ea">
-        <button class="ib" onclick="openEditModal(${realIdx})" title="Sửa">✏️</button>
-        <button class="ib" onclick="deleteEntry(${realIdx})" title="Xóa">🗑️</button>
+        <button class="ib" onclick="openEdit(${realIdx})">✏️</button>
+        <button class="ib" onclick="delEntry(${realIdx})">🗑️</button>
       </div>
     </div>`;
   });
-  
-  container.innerHTML = html;
+  list.innerHTML = html;
 }
 
-// ─── FORM MODAL (ADD & EDIT) ───
-function openAddModal() {
-  document.getElementById("modalTitle").innerText = "Thêm giao dịch mới";
-  document.getElementById("modalSubmitBtn").innerText = "➕ Thêm giao dịch";
-  document.getElementById("editIndex").value = ""; // Rỗng nghĩa là thêm mới
-  
-  // Set ngày mặc định là ngày hiện tại
-  let today = new Date().toISOString().substring(0, 10);
-  document.getElementById("fDate").value = today;
-  document.getElementById("fDesc").value = "";
-  document.getElementById("fAmt").value = "";
-  document.getElementById("fAmtPreview").innerText = "0 ₫";
-  document.getElementById("fCat").value = "1";
-  
-  document.getElementById("modal").classList.add("on");
-}
-
-function openEditModal(idx) {
-  let item = db.entries[idx];
-  if(!item) return;
-  
-  document.getElementById("modalTitle").innerText = "Chỉnh sửa giao dịch";
-  document.getElementById("modalSubmitBtn").innerText = "🔄 Cập nhật";
-  document.getElementById("editIndex").value = idx; // Lưu vị trí cần sửa
-  
-  document.getElementById("fDate").value = item.date;
-  document.getElementById("fDesc").value = item.desc;
-  document.getElementById("fAmt").value = item.amt;
-  previewAmt(item.amt);
-  document.getElementById("fCat").value = item.cat || "1";
-  
-  document.getElementById("modal").classList.add("on");
-}
-
-function closeModal() {
-  document.getElementById("modal").classList.remove("on");
-}
-
-function previewAmt(val) {
-  document.getElementById("fAmtPreview").innerText = fmtAmt(val || 0);
-}
-
-function submitForm() {
-  const date = document.getElementById("fDate").value;
-  const desc = document.getElementById("fDesc").value.trim();
-  const amt = document.getElementById("fAmt").value;
-  const cat = document.getElementById("fCat").value;
-  const editIdx = document.getElementById("editIndex").value;
-  
-  if(!date || !desc || !amt) {
-    showToast("Vui lòng nhập đủ thông tin!");
-    return;
-  }
-  
-  if(editIdx === "") {
-    // Chức năng THÊM MỚI
-    let newEntry = {
-      id: "e_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
-      date: date,
-      desc: desc,
-      amt: Number(amt),
-      cat: cat
-    };
-    db.entries.push(newEntry);
-    showToast("Đã thêm giao dịch!");
-  } else {
-    // Chức năng CẬP NHẬT / EDIT
-    let idx = Number(editIdx);
-    if(db.entries[idx]) {
-      db.entries[idx].date = date;
-      db.entries[idx].desc = desc;
-      db.entries[idx].amt = Number(amt);
-      db.entries[idx].cat = cat;
-      showToast("Đã cập nhật giao dịch!");
-    }
-  }
-  
-  saveData();
-  closeModal();
-  buildPeriodStrip();
-  renderList();
-  buildPrintSelect();
-}
-
-function deleteEntry(idx) {
-  if(confirm("Bạn có chắc chắn muốn xóa giao dịch này?")) {
-    db.entries.splice(idx, 1);
-    showToast("Đã xóa giao dịch!");
-    saveData();
-    buildPeriodStrip();
-    renderList();
-    buildPrintSelect();
-  }
-}
-
-// ─── CÀI ĐẶT ───
 function saveCfg() {
-  db.config.name = document.getElementById("cfgName").value.trim();
-  db.config.addr = document.getElementById("cfgAddr").value.trim();
-  db.config.tax = document.getElementById("cfgTax").value.trim();
-  db.config.loc = document.getElementById("cfgLoc").value.trim();
-  db.config.method = document.getElementById("cfgMethod").value;
+  S.cfg.name = document.getElementById('cfgName').value.trim();
+  S.cfg.addr = document.getElementById('cfgAddr').value.trim();
+  S.cfg.tax = document.getElementById('cfgTax').value.trim();
+  S.cfg.loc = document.getElementById('cfgLoc').value.trim();
+  S.cfg.method = document.getElementById('cfgMethod').value;
   
-  saveData();
-  updateTaxTabUI();
-  showToast("Đã lưu thông tin cài đặt!");
+  persist();
+  updateTaxUI();
+  toast('✓ Đã lưu thông tin hộ kinh doanh');
 }
 
 function clearAll() {
-  if(confirm("CẢNH BÁO: Hành động này sẽ xóa toàn bộ giao dịch và cài đặt hiện tại! Bạn chắc chắn chứ?")) {
-    db.entries = [];
-    db.config = { name: "", addr: "", tax: "", loc: "", method: "old" };
-    saveData();
+  if(confirm('🚨 XÓA TOÀN BỘ DỮ LIỆU?\nHành động này không thể hoàn tác.')) {
+    S.entries = [];
+    S.cfg = { name:'', addr:'', tax:'', loc:'', method:'old' };
+    persist();
     initApp();
-    showToast("Đã xóa hết dữ liệu!");
+    toast('✓ Đã xóa sạch dữ liệu');
   }
 }
 
-// ─── XUẤT SAO LƯU / NHẬP JSON ───
 function exportJSON() {
-  let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-  let dlAnchorNode = document.createElement('a');
-  dlAnchorNode.setAttribute("href", dataStr);
-  let time = new Date().toISOString().substring(0,10);
-  dlAnchorNode.setAttribute("download", `so_doanh_thu_s1a_${time}.json`);
-  document.body.appendChild(dlAnchorNode);
-  dlAnchorNode.click();
-  dlAnchorNode.remove();
+  let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db = {cfg:S.cfg, entries:S.entries}));
+  let a = document.createElement('a');
+  a.setAttribute("href", dataStr);
+  let t = new Date().toISOString().substring(0,10);
+  a.setAttribute("download", `s1a_hkd_backup_${t}.json`);
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
 function importFile() {
-  let input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json';
-  input.onchange = e => {
-    let file = e.target.files[0];
-    let reader = new FileReader();
-    reader.readAsText(file,'UTF-8');
-    reader.onload = readerEvent => {
-      let content = readerEvent.target.result;
-      try {
-        let imported = JSON.parse(content);
-        if(imported.entries && Array.isArray(imported.entries)) {
-          db = imported;
-          saveData();
-          initApp();
-          showToast("Nhập dữ liệu thành công!");
-        } else {
-          showToast("File không đúng cấu trúc!");
-        }
-      } catch(ex) {
-        showToast("Lỗi đọc file JSON!");
+  let inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.json';
+  inp.onchange = async (e) => {
+    let f = e.target.files[0]; if(!f) return;
+    try {
+      let t = await f.text();
+      let d = JSON.parse(t);
+      if(!d.entries) { toast('⚠ File không hợp lệ!'); return; }
+      if(confirm('Nhập ' + d.entries.length + ' giao dịch từ file? Dữ liệu hiện tại sẽ bị ghi đè.')) {
+        if(d.cfg) S.cfg = { ...S.cfg, ...d.cfg };
+        if(d.entries) S.entries = d.entries;
+        persist(); fillCfgForm(); initApp();
+        toast('✓ Đã khôi phục dữ liệu');
       }
-    }
-  }
-  input.click();
+    } catch(err) { toast('⚠ Lỗi đọc file!'); }
+  };
+  inp.click();
 }
 
-// ─── IN 📜 ───
 function buildPrintSelect() {
-  const sel = document.getElementById("selPrint");
+  const sel = document.getElementById('selPrint');
+  if(!sel) return;
   let months = [];
-  db.entries.forEach(e => {
-    let m = e.date.substring(0,7);
+  S.entries.forEach(e => {
+    let m = e.date.substring(0, 7);
     if(!months.includes(m)) months.push(m);
   });
   months.sort((a,b) => b.localeCompare(a));
@@ -833,60 +824,81 @@ function buildPrintSelect() {
     sel.innerHTML = `<option value="">-- Chưa có dữ liệu --</option>`;
     return;
   }
-  
-  let html = "";
+  let html = '';
   months.forEach(m => {
-    let p = m.split("-");
+    let p = m.split('-');
     html += `<option value="${m}">Tháng ${p[1]}/${p[0]}</option>`;
   });
   sel.innerHTML = html;
 }
 
+function genNotif() {
+  let total = 0;
+  S.entries.forEach(e => total += e.amt);
+  let name = S.cfg.name || '[Tên hộ kinh doanh]';
+  let tax = S.cfg.tax || '[MST]';
+  
+  let msg = `📢 THÔNG BÁO NHẮC NỘP THUẾ\n`;
+  msg += `-------------------------\n`;
+  msg += `🏢 Hộ kinh doanh: ${name}\n`;
+  msg += `📌 Mã số thuế: ${tax}\n`;
+  msg += `📊 Tổng doanh thu (S1a): ${total.toLocaleString('vi-VN')} ₫\n`;
+  msg += `📝 Trạng thái: Sẵn sàng lập tờ khai mẫu 01/CNKD.\n\n`;
+  msg += `💡 Nhắc nhở: Quý khách vui lòng rà soát lại hóa đơn đầu ra và nộp tờ khai đúng hạn trước ngày 31/01 theo quy định.`;
+  
+  notifText = msg;
+  const box = document.getElementById('notifBox');
+  if(box) {
+    box.textContent = msg;
+    box.style.display = 'block';
+  }
+  const btn = document.getElementById('copyBtn');
+  if(btn) btn.style.display = 'block';
+}
+
+function copyNoti() {
+  if(!notifText) return;
+  navigator.clipboard.writeText(notifText).then(() => {
+    toast('✓ Đã sao chép thông báo');
+  }).catch(() => { toast('⚠ Lỗi sao chép!'); });
+}
+
 function doPrint() {
-  const m = document.getElementById("selPrint").value;
-  if(!m) { showToast("Chưa có tháng để in!"); return; }
+  const m = document.getElementById('selPrint').value;
+  if(!m) { toast('⚠ Không có dữ liệu để in!'); return; }
   
-  let filtered = db.entries.filter(e => e.date.startsWith(m));
-  filtered.sort((a,b) => a.date.localeCompare(b.date)); // In xếp xuôi từ đầu tháng
+  let filtered = S.entries.filter(e => e.date.startsWith(m));
+  filtered.sort((a,b) => a.date.localeCompare(b.date));
   
-  let p = m.split("-");
-  let thg = p[1], nam = p[2] || p[0];
+  let p = m.split('-');
+  let thg = p[1], nam = p[0];
   
   let total = 0;
-  let rowsHtml = "";
+  let rowsHtml = '';
   
   filtered.forEach((e, idx) => {
-    total += Number(e.amt);
-    let dParts = e.date.split("-");
-    let fDateStr = `${dParts[2]}/${dParts[1]}/${dParts[0]}`;
-    let c = catsInfo[e.cat || "1"];
+    total += e.amt;
+    let dp = e.date.split('-');
+    let fDate = `${dp[2]}/${dp[1]}/${dp[0]}`;
     
     rowsHtml += `
     <tr>
       <td class="cc">${idx + 1}</td>
-      <td class="cc">${fDateStr}</td>
-      <td class="cc">S01-${String(idx+1).padStart(3,'0')}</td>
+      <td class="cc">${fDate}</td>
+      <td class="cc">BC-${String(idx+1).padStart(3,'0')}</td>
       <td>${e.desc}</td>
-      <td>${c.name}</td>
-      <td class="cr">${fmtAmtRaw(e.amt)}</td>
-      <td class="cc">${c.vat}</td>
-      <td class="cc">${c.pit}</td>
+      <td>Nhóm ngành nghề tính thuế hằng ngày</td>
+      <td class="cr">${e.amt.toLocaleString('vi-VN')}</td>
+      <td class="cc">Khai thuế</td>
+      <td class="cc">Khai thuế</td>
       <td></td>
     </tr>`;
   });
   
-  // Điền nốt hàng trống nếu ít dữ liệu để form chuẩn đẹp A4
-  let minRows = 12;
-  if(filtered.length < minRows) {
-    for(let i = filtered.length; i < minRows; i++) {
-      rowsHtml += `<tr><td class="cc">${i+1}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
-    }
-  }
-  
-  let nameHtml = db.config.name ? `<strong>${db.config.name}</strong>` : "........................................................";
-  let taxHtml = db.config.tax ? `<strong>${db.config.tax}</strong>` : "........................................................";
-  let addrHtml = db.config.addr ? `<strong>${db.config.addr}</strong>` : "........................................................";
-  let locHtml = db.config.loc ? `<strong>${db.config.loc}</strong>` : "........................................................";
+  let nameHtml = S.cfg.name ? `<strong>${S.cfg.name}</strong>` : "........................................................";
+  let taxHtml = S.cfg.tax ? `<strong>${S.cfg.tax}</strong>` : "........................................................";
+  let addrHtml = S.cfg.addr ? `<strong>${S.cfg.addr}</strong>` : "........................................................";
+  let locHtml = S.cfg.loc ? `<strong>${S.cfg.loc}</strong>` : "........................................................";
   
   let printHtml = `
   <div class="ph">
@@ -931,7 +943,7 @@ function doPrint() {
         <td class="cc"></td>
         <td>TỔNG CỘNG DOANH THU</td>
         <td></td>
-        <td class="cr">${fmtAmtRaw(total)}</td>
+        <td class="cr">${total.toLocaleString('vi-VN')}</td>
         <td class="cc"></td><td class="cc"></td><td></td>
       </tr>
     </tbody>
@@ -943,78 +955,20 @@ function doPrint() {
     <p style="font-style:italic; opacity:.6; margin-top:2px; margin-right:85px">(Ký, ghi rõ họ tên)</p>
   </div>`;
   
-  document.getElementById("printContent").innerHTML = printHtml;
-  document.getElementById("printOverlay").classList.add("on");
+  document.getElementById('printContent').innerHTML = printHtml;
+  document.getElementById('printOverlay').classList.add('on');
 }
 
 function closePrint() {
-  document.getElementById("printOverlay").classList.remove("on");
+  document.getElementById('printOverlay').classList.remove('on');
 }
 
-// ─── TẠO THÔNG BÁO NHẮC THUẾ ───
-function genNoti() {
-  let total = 0;
-  db.entries.forEach(e => total += Number(e.amt));
-  let name = db.config.name || "[Tên Hộ Kinh Doanh]";
-  let tax = db.config.tax || "[Mã Số Thuế]";
-  
-  let msg = `📢 THÔNG BÁO NHẮC LẬP TỜ KHAI THUẾ\n`;
-  msg += `───────────────────────\n`;
-  msg += `🏢 HKD: ${name}\n`;
-  msg += `📌 MST: ${tax}\n`;
-  msg += `📊 Tổng DT tích lũy sổ S1a: ${fmtAmt(total)}\n`;
-  msg += `⏱️ Trạng thái: Sẵn sàng lập tờ khai mẫu 01/CNKD.\n\n`;
-  msg += `💡 Nhắc nhở: Quý khách nhớ rà soát lại hóa đơn đầu ra (nếu có) trước khi nộp tờ khai lên Cơ quan Thuế. Hạn nộp là ngày 31/01.`;
-  
-  const box = document.getElementById("notifBox");
-  box.innerText = msg;
-  box.style.display = "block";
-  document.getElementById("copyBtn").style.display = "block";
-}
-
-function copyNoti() {
-  const text = document.getElementById("notifBox").innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    showToast("Đã sao chép vào bộ nhớ tạm!");
-  }).catch(() => {
-    showToast("Lỗi không thể sao chép!");
-  });
-}
-
-// ─── UTILS ───
-function fmtAmt(val) {
-  return Number(val).toLocaleString('vi-VN') + " ₫";
-}
-function fmtAmtRaw(val) {
-  if(!val || val === 0) return "-";
-  return Number(val).toLocaleString('vi-VN');
-}
-
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.innerText = msg;
-  t.classList.add("on");
-  setTimeout(() => t.classList.remove("on"), 2200);
-}
-
-// Mẹo nhỏ ngẫu nhiên khi bật app
-function checkDailyPopup() {
-  const pop = document.getElementById("dailyPopup");
-  let tips = [
-    "Luôn ghi chép đầy đủ các giao dịch phát sinh hằng ngày để đối chiếu thuế chính xác nhất cuối năm!",
-    "Sổ sách rõ ràng giúp bạn tối ưu chi phí thuế hợp pháp và tránh bị cơ quan kiểm tra phạt chậm nộp.",
-    "Cuối tháng nên xuất một bản file dữ liệu JSON cất vào máy để đề phòng đổi điện thoại không bị mất số liệu."
-  ];
-  let titles = ["Mẹo doanh thu", "Kế toán thông minh", "An toàn dữ liệu"];
-  
-  let r = Math.floor(Math.random() * tips.length);
-  document.getElementById("dpTitle").innerText = titles[r];
-  document.getElementById("dpMsg").innerText = tips[r];
-  
-  setTimeout(() => pop.classList.add("on"), 600);
-}
-function closeDp() {
-  document.getElementById("dailyPopup").classList.remove("on");
+function toast(msg) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 2200);
 }
 </script>
 </body>
