@@ -260,4 +260,144 @@
             renderAll();
             closeModal();
             document.getElementById('transaction-amount').value = '';
-            document.getElementById('transaction-note').value =
+            document.getElementById('transaction-note').value = '';
+        }
+
+        function deleteTransaction(id) {
+            appData.transactions = appData.transactions.filter(t => t.id !== id);
+            saveToLocal();
+            renderAll();
+        }
+
+        function saveConfig() {
+            appData.config.name = document.getElementById('cfg-name').value || 'Hộ kinh doanh cá thể';
+            appData.config.mst = document.getElementById('cfg-mst').value || 'Chưa cập nhật';
+            appData.config.method = document.getElementById('cfg-method').value;
+            saveToLocal();
+            renderAll();
+            alert('Đã cập nhật thông tin thành công!');
+        }
+
+        function saveToLocal() {
+            localStorage.setItem('hkd_data_pro', JSON.stringify(appData));
+        }
+
+        // Logic tính toán động nâng cao dựa trên doanh thu
+        function renderAll() {
+            const listContainer = document.getElementById('list-giao-dich');
+            let totalRevenue = 0;
+
+            if(appData.transactions.length === 0) {
+                listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#95a5a6;"><i class="fa-regular fa-folder-open" style="font-size:35px; margin-bottom:10px; display:block;"></i>Chưa có doanh thu.<br><small>Nhấn + để thêm mới</small></div>`;
+            } else {
+                let html = '';
+                appData.transactions.forEach(t => {
+                    totalRevenue += t.amount;
+                    html += `<div class="transaction-item">
+                                <div><strong>+ ${t.amount.toLocaleString('vi-VN')} đ</strong><br><small style="color:#7f8c8d">${t.note} (${t.date})</small></div>
+                                <button class="btn-delete" onclick="deleteTransaction(${t.id})"><i class="fa-regular fa-trash-can"></i></button>
+                             </div>`;
+                });
+                listContainer.innerHTML = html;
+            }
+
+            document.getElementById('txt-tong-doanhthu').innerText = totalRevenue.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('txt-so-giaodich').innerText = appData.transactions.length + ' giao dịch';
+            document.getElementById('badge-count').innerText = appData.transactions.length;
+
+            // Xử lý logic thuế động
+            let groupTitle = "NHÓM 1";
+            let groupDesc = "Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ";
+            let taxGTGT = "Miễn";
+            let taxTNCN = "Miễn";
+
+            if (totalRevenue > 1000000000) {
+                groupTitle = "NHÓM 2 NÂNG CAO";
+                groupDesc = "Doanh thu > 1 tỷ/năm · Quy mô: Lớn";
+                taxGTGT = (totalRevenue * 0.01).toLocaleString('vi-VN') + " đ (Gợi ý 1%)";
+                taxTNCN = (totalRevenue * 0.005).toLocaleString('vi-VN') + " đ (Gợi ý 0.5%)";
+            }
+
+            document.getElementById('tax-group-title').innerText = groupTitle;
+            document.getElementById('tax-group-desc').innerText = groupDesc;
+            document.getElementById('lbl-tax-gtgt').innerText = taxGTGT;
+            document.getElementById('lbl-tax-tncn').innerText = taxTNCN;
+
+            // Xử lý logic tính ngày đếm ngược thời gian thực
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            let targetDate = new Date(currentYear + 1, 0, 31); // 31/01 năm sau
+
+            if (appData.config.method === '2') {
+                document.getElementById('lbl-lich-title').innerText = "Kê khai kỳ hạn HKD mới thành lập";
+                document.getElementById('lbl-lich-subtitle').innerText = "Hạn đợt gần nhất quy định: 31/7 hoặc 31/1 định kỳ";
+                if (now.getMonth() < 7) {
+                    targetDate = new Date(currentYear, 6, 31); // 31/07 năm nay
+                }
+            } else {
+                document.getElementById('lbl-lich-title').innerText = `Kê khai DT cả năm ${currentYear}`;
+                document.getElementById('lbl-lich-subtitle').innerText = `Khai tổng doanh thu năm. Hạn cuối: 31/01/${currentYear + 1}`;
+            }
+
+            const diffTime = targetDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('lbl-days-left').innerHTML = `<i class="fa-regular fa-calendar-check"></i> Còn ${diffDays > 0 ? diffDays : 0} ngày`;
+
+            // Tạo chuỗi nội dung văn bản thông báo đồng bộ động tự động
+            const textNotice = `🔔 NHẮC KÊ KHAI DOANH THU - ${groupTitle}
+===================================
+🏢 Hộ KD: ${appData.config.name}
+🆔 MST: ${appData.config.mst}
+📅 Trạng thái hạn: Hạn nộp còn ${diffDays > 0 ? diffDays : 0} ngày.
+📌 Thuế suất GTGT: ${taxGTGT} | TNCN: ${taxTNCN}
+===================================
+✔️ Các bước thực hiện:
+1. Kiểm tra chi tiết sổ doanh thu S1a-HKD đầy đủ.
+2. Lập tờ khai doanh thu mẫu 01/CNKD.
+3. Nộp qua eTax Mobile hoặc Cơ quan Thuế trực thuộc.`;
+            document.getElementById('nhac-thue-text').innerText = textNotice;
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+            const a = document.createElement('a');
+            a.setAttribute("href", dataStr);
+            a.setAttribute("download", `backup_s1a_hkd_${new Date().toLocaleDateString('vi-VN')}.json`);
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        function importJSON(input) {
+            const file = input.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    appData = JSON.parse(e.target.result);
+                    saveToLocal();
+                    loadData();
+                    alert('Khôi phục toàn bộ dữ liệu thành công!');
+                } catch (err) { alert('Tệp tin dữ liệu sao lưu JSON không đúng định dạng chuẩn.'); }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            if(confirm('Cảnh báo nguy hiểm: Bạn có chắc chắn muốn xóa toàn bộ lịch sử dữ liệu? Hành động này không thể hoàn tác.')) {
+                localStorage.removeItem('hkd_data_pro');
+                appData = { config: { name: 'Hộ kinh doanh cá thể', mst: 'Chưa cập nhật', method: '1' }, transactions: [] };
+                loadData();
+            }
+        }
+
+        function copyNotification() {
+            const text = document.getElementById('nhac-thue-text').innerText;
+            navigator.clipboard.writeText(text);
+            alert('Đã sao chép nội dung thông báo động thành công!');
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>
