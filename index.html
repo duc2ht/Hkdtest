@@ -7,23 +7,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Sổ Doanh Thu S1a-HKD</title>
     <style>
-        /* --- RESET & VARS CHUẨN TÁC GIẢ --- */
+        /* --- RESET & VARS CHUẨN MƯỢT --- */
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         :root {
             --red: #C8102E; --red2: #9b0e24; --red-bg: #fdf0f2;
             --dark: #1a1a2e; --text: #2d2d3a; --sub: #6b7280;
             --bg: #f0f2f7; --white: #fff; --border: #e4e7ed;
             --green: #16a34a; --blue: #1e40af; --blue-bg: #eff6ff;
-            --radius: 14px; --shadow: 0 2px 14px rgba(0,0,0,.07);
+            --radius: 14px; --shadow: 0 2px 14px rgba(0,0,0,.06);
         }
         body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
         
         #app { position: fixed; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; background: var(--bg); padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
         
         /* --- HEADER --- */
-        #hd { background: linear-gradient(135deg, var(--red), var(--red2)); color: #fff; padding: 12px 16px 10px; flex-shrink: 0; z-index: 20; box-shadow: 0 2px 12px rgba(200,16,46,.4); }
+        #hd { background: linear-gradient(135deg, var(--red), var(--red2)); color: #fff; padding: 12px 16px 10px; flex-shrink: 0; z-index: 20; box-shadow: 0 2px 12px rgba(200,16,46,.35); }
         #hd h1 { font-size: 14px; font-weight: 800; }
-        #hdSub { font-size: 11px; opacity: .8; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+        #hdSub { font-size: 11px; opacity: .82; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
         #hdKK { background: rgba(255,255,255,.22); border-radius: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
         .hd-row { display: flex; align-items: center; justify-content: space-between; }
         .hd-save { font-size: 10px; opacity: .75; margin-top: 4px; display: flex; align-items: center; gap: 5px; }
@@ -34,15 +34,15 @@
         /* --- SCROLL AREA --- */
         #scroll { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
         
-        /* --- BOTTOM NAV --- */
+        /* --- BOTTOM NAV (Chỉ gồm 4 mục chính sạch sẽ) --- */
         #bnav { flex-shrink: 0; display: flex; background: var(--white); border-top: 1px solid var(--border); box-shadow: 0 -2px 14px rgba(0,0,0,.07); }
-        .ni { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 2px 6px; border: none; background: none; font-family: inherit; font-size: 9.5px; color: var(--sub); cursor: pointer; gap: 3px; min-height: 56px; }
+        .ni { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 2px 6px; border: none; background: none; font-family: inherit; font-size: 10px; color: var(--sub); cursor: pointer; gap: 3px; min-height: 56px; }
         .ni.on { color: var(--red); font-weight: 700; }
         .ni svg { width: 21px; height: 21px; stroke-width: 1.8; fill: none; stroke: currentColor; }
         .ni.on svg { stroke-width: 2.3; }
         
         /* --- FAB --- */
-        #fab { position: fixed; bottom: calc(56px + env(safe-area-inset-bottom) + 14px); right: 18px; width: 54px; height: 54px; border-radius: 50%; background: var(--red); color: #fff; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 4px 20px rgba(200,16,46,.5); display: flex; align-items: center; justify-content: center; z-index: 30; }
+        #fab { position: fixed; bottom: calc(56px + env(safe-area-inset-bottom) + 14px); right: 18px; width: 54px; height: 54px; border-radius: 50%; background: var(--red); color: #fff; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 4px 20px rgba(200,16,46,.45); display: flex; align-items: center; justify-content: center; z-index: 30; }
         #fab:active { transform: scale(.93); }
         
         /* --- TAB PANELS --- */
@@ -50,28 +50,30 @@
         .tab.on { display: block; }
         
         /* --- COMPONENT STYLES --- */
-        .ps { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 10px; -webkit-overflow-scrolling: touch; }
+        .ps { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .ps::-webkit-scrollbar { display: none; }
         .pc { padding: 6px 15px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--sub); font-weight: 600; flex-shrink: 0; -webkit-appearance: none; }
         .pc.on { background: var(--red); border-color: var(--red); color: #fff; }
         
         .sum { background: linear-gradient(135deg,var(--red),var(--red2)); color: #fff; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .sum-num { font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
-        .sum-lbl { font-size: 11px; opacity: .8; margin-bottom: 3px; }
+        .sum-lbl { font-size: 11px; opacity: .82; margin-bottom: 3px; }
         .sum-cnt { font-size: 11px; opacity: .68; margin-top: 3px; }
         
         .sec { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
         .sec-t { font-size: 13px; font-weight: 700; }
         .bdg { background: var(--red-bg); color: var(--red); font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 10px; }
         
-        .ec { background: var(--white); border-radius: 12px; padding: 11px 12px; margin-bottom: 7px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow); border-left: 3px solid transparent; }
+        .ec { background: var(--white); border-radius: 12px; padding: 11px 12px; margin-bottom: 7px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow); border-left: 3px solid transparent; transition: border-color 0.2s; }
         .ec:active { border-left-color: var(--red); }
         .db { background: var(--red-bg); color: var(--red); border-radius: 8px; padding: 6px 7px; text-align: center; min-width: 40px; font-weight: 800; font-size: 16px; line-height: 1; flex-shrink: 0; }
         .db .dm { font-size: 10px; font-weight: 600; color: var(--sub); margin-top: 1px; }
         .ei { flex: 1; min-width: 0; }
         .edesc { font-size: 13px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .eamt { font-size: 13px; font-weight: 800; color: var(--green); margin-top: 2px; }
-        .btn-del { border: none; background: none; color: #dc2626; cursor: pointer; padding: 8px; font-size: 14px; }
+        .btn-del { border: none; background: none; color: #dc2626; cursor: pointer; padding: 8px; font-size: 14px; flex-shrink: 0; }
+        .mt { text-align: center; padding: 50px 20px; color: var(--sub); }
+        .mt-i { font-size: 56px; margin-bottom: 12px; opacity: .35; }
         
         .card { background: var(--white); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
         .card-t { font-size: 11px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 14px; }
@@ -81,6 +83,8 @@
         .fl { display: block; font-size: 11px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
         .fi { width: 100%; padding: 12px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 16px; color: var(--text); background: var(--white); outline: none; -webkit-appearance: none; }
         .fi:focus { border-color: var(--red); }
+        .fi::placeholder { color: #c4c9d4; }
+        select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%236b7280' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
         .amt-preview { font-size: 13px; color: var(--green); font-weight: 700; margin-top: 5px; min-height: 18px; }
         
         .btn { width: 100%; padding: 13px; border: none; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; display: block; text-align: center; text-decoration: none; -webkit-appearance: none; }
@@ -92,14 +96,14 @@
         /* --- MODAL SHEET --- */
         #modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.48); z-index: 100; align-items: flex-end; justify-content: center; }
         #modal.on { display: flex; }
-        .sheet { background: var(--white); border-radius: 22px 22px 0 0; padding: 20px 18px; padding-bottom: calc(env(safe-area-inset-bottom) + 32px); width: 100%; max-width: 480px; animation: sheetUp .25s ease; max-height: 90vh; overflow-y: auto; }
+        .sheet { background: var(--white); border-radius: 22px 22px 0 0; padding: 20px 18px; padding-bottom: calc(env(safe-area-inset-bottom) + 32px); width: 100%; max-width: 480px; animation: sheetUp .23s cubic-bezier(0.25, 1, 0.5, 1); max-height: 90vh; overflow-y: auto; }
         @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
         .mtitle { font-size: 17px; font-weight: 800; margin-bottom: 16px; }
         
         .import-zone { border: 2px dashed var(--border); border-radius: 11px; padding: 18px; text-align: center; color: var(--sub); font-size: 13px; cursor: pointer; margin-bottom: 10px; }
         
-        /* --- LỊCH THUẾ ĐÚNG PHÔI --- */
+        /* --- NHÓM HKD & LỊCH THUẾ --- */
         .nhom-card { background: linear-gradient(135deg,#1e3a5f,#1e40af); color: #fff; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(30,64,175,.3); }
         .nhom-badge { display: inline-block; background: #fff; color: #1e40af; font-size: 13px; font-weight: 900; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; letter-spacing: .5px; }
         .nhom-info .nhom-dt { font-size: 12px; opacity: .85; margin-bottom: 12px; font-weight: 600; }
@@ -123,7 +127,7 @@
         .fm-dt p { font-size: 11px; color: var(--sub); line-height: 1.4; }
         .notif-box { background: #f8fafc; border-radius: 10px; padding: 13px; margin: 10px 0; font-size: 12px; line-height: 1.65; color: #374151; border: 1px solid var(--border); white-space: pre-wrap; word-break: break-word; }
         
-        /* --- IN PHÔI CHUẨN A4 HÀNH CHÍNH --- */
+        /* --- IN PHÔI CHUẨN ĐÚNG PHÒNG THUẾ --- */
         #printOverlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 200; overflow-y: auto; }
         #printOverlay.on { display: block; }
         #printBar { background: #16a34a; padding: 12px 16px; display: flex; gap: 10px; align-items: center; position: sticky; top: 0; z-index: 10; }
@@ -151,6 +155,7 @@
             #printBar { display: none !important; }
             #printContent { padding: 0 !important; }
         }
+        .sp { height: 20px; }
     </style>
 </head>
 <body>
@@ -186,15 +191,16 @@
                 <span class="bdg" id="listBdg">0</span>
             </div>
             <div id="entryList"></div>
+            <div class="sp"></div>
         </div>
 
         <div class="tab" id="tab-tax">
             <div class="nhom-card">
-                <div class="nhom-badge">NHÓM 1</div>
+                <div class="nhom-badge" id="lblNhomTitle">NHÓM 1</div>
                 <div class="nhom-info">
-                    <div class="nhom-dt">Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ</div>
+                    <div class="nhom-dt" id="lblNhomDesc">Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ</div>
                     <div class="nhom-grid">
-                        <div class="nhom-item"><span class="nhom-label">Thuế suất</span><span class="nhom-val green">GTGT: Miễn<br>TNCN: Miễn</span></div>
+                        <div class="nhom-item"><span class="nhom-label">Thuế suất</span><span class="nhom-val green" id="taxValGtgt">GTGT: Miễn<br>TNCN: Miễn</span></div>
                         <div class="nhom-item"><span class="nhom-label">Sổ sách</span><span class="nhom-val">S1a-HKD<br>Ghi chép đơn giản</span></div>
                         <div class="nhom-item"><span class="nhom-label">Hóa đơn</span><span class="nhom-val">Không bắt buộc</span></div>
                         <div class="nhom-item"><span class="nhom-label">Kê khai</span><span class="nhom-val" id="nhomKeKhai">1 lần/năm<br>Hạn: 31/1</span></div>
@@ -230,6 +236,7 @@
                 <div class="notif-box" id="notifBox"></div>
                 <button class="btn btn-b" onclick="copyNotification()">Sao chép văn bản nhắc thuế</button>
             </div>
+            <div class="sp"></div>
         </div>
 
         <div class="tab" id="tab-exp">
@@ -243,6 +250,7 @@
                 </div>
                 <button class="btn btn-r" onclick="doPrint()">Xem & Tạo Bản In</button>
             </div>
+            <div class="sp"></div>
         </div>
 
         <div class="tab" id="tab-cfg">
@@ -272,6 +280,7 @@
                 <button class="btn btn-g" onclick="exportJSON()">Xuất tệp sao lưu cục bộ (JSON)</button>
                 <button class="btn btn-danger" onclick="clearAll()">Xóa sạch dữ liệu cục bộ</button>
             </div>
+            <div class="sp"></div>
         </div>
     </div>
 
@@ -289,7 +298,7 @@
         <div class="handle"></div>
         <div class="mtitle" id="mTitle">✨ Ghi nhận doanh thu mới</div>
         <div class="fg"><label class="fl">Ngày thực hiện phát sinh</label><input class="fi" id="eDate" type="date"></div>
-        <div class="fg"><label class="fl">Nội dung diễn giải sản phẩm</label><input class="fi" id="eDesc" type="text" placeholder="Bán lẻ sản phẩm lẻ..."></div>
+        <div class="fg"><label class="fl">Nội dung diễn giải sản phẩm</label><input class="fi" id="eDesc" type="text" placeholder="Bán lẻ sản phẩm dịch vụ lẻ..."></div>
         <div class="fg">
             <label class="fl">Số tiền thu về (VNĐ)</label>
             <input class="fi" id="eAmt" type="number" placeholder="0" inputmode="numeric" oninput="document.getElementById('amtPrev').innerText = (parseFloat(this.value)||0).toLocaleString('vi-VN') + ' đ'">
@@ -337,7 +346,7 @@
             setTimeout(() => {
                 document.getElementById('saveDot').classList.remove('saving');
                 showSaveStatus(data.savedAt);
-            }, 300);
+            }, 250);
         } catch (e) { console.error(e); }
     }
 
@@ -364,7 +373,7 @@
         S.cfg.method = document.getElementById('cfgMethod').value;
         persist();
         renderAll();
-        alert('✨ Đã cập nhật cấu hình thực thể!');
+        alert('✨ Đã cập nhật cấu hình thực thể hộ thành công!');
     }
 
     function switchTab(e, tabId) {
@@ -392,7 +401,7 @@
         const desc = document.getElementById('eDesc').value.trim();
         const amt = parseFloat(document.getElementById('eAmt').value);
 
-        if (!dt || !desc || isNaN(amt) || amt <= 0) { alert('Vui lòng điền đủ dữ liệu phát sinh'); return; }
+        if (!dt || !desc || isNaN(amt) || amt <= 0) { alert('Vui lòng điền đủ dữ liệu phát sinh hợp lệ!'); return; }
 
         S.entries.push({ id: Date.now(), date: dt, desc, amount: amt });
         persist();
@@ -401,7 +410,7 @@
     }
 
     function deleteEntry(id) {
-        if (!confirm('Bạn thực sự muốn xóa dòng doanh thu mục này khỏi sổ?')) return;
+        if (!confirm('Bạn thực sự muốn xóa dòng doanh thu này ra khỏi hệ thống sổ?')) return;
         S.entries = S.entries.filter(e => e.id !== id);
         persist();
         renderAll();
@@ -418,7 +427,10 @@
     function renderAll() {
         const strip = document.getElementById('periodStrip');
         const map = {};
+        let totalRevenueAllTime = 0;
+
         S.entries.forEach(e => {
+            totalRevenueAllTime += e.amount;
             const parts = e.date.split('-');
             const key = `${parts[1]}/${parts[0]}`;
             map[key] = true;
@@ -462,6 +474,19 @@
         document.getElementById('listBdg').innerText = filtered.length;
         document.getElementById('hdKK').innerText = S.cfg.name ? S.cfg.name.substring(0,10) : 'Hộ Kinh Doanh';
 
+        // LOGIC TÍNH TOÁN THUẾ SUẤT ĐỘNG THEO DOANH THU THẬT
+        let taxGtgtText = "GTGT: Miễn<br>TNCN: Miễn";
+        if(totalRevenueAllTime > 1000000000) {
+            document.getElementById('lblNhomTitle').innerText = "NHÓM 2 NÂNG CAO";
+            document.getElementById('lblNhomDesc').innerText = "Doanh thu > 1 tỷ/năm · Quy mô: Lớn";
+            taxGtgtText = `GTGT: 1% (~ ${(totalRevenueAllTime*0.01).toLocaleString('vi-VN')}đ)<br>TNCN: 0.5% (~ ${(totalRevenueAllTime*0.005).toLocaleString('vi-VN')}đ)`;
+        } else {
+            document.getElementById('lblNhomTitle').innerText = "NHÓM 1";
+            document.getElementById('lblNhomDesc').innerText = "Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ";
+        }
+        document.getElementById('taxValGtgt').innerHTML = taxGtgtText;
+
+        // BỘ ĐẾM LỊCH NỘP THUẾ THỜI GIAN THỰC
         const nay = new Date();
         let hạnNộp = new Date(nay.getFullYear() + 1, 0, 31);
         if(S.cfg.method === 'new' && nay.getMonth() < 7) {
@@ -474,11 +499,20 @@
         const conLai = Math.ceil((hạnNộp - nay)/(1000*60*60*24));
         document.getElementById('lblDaysLeft').innerText = conLai > 0 ? conLai : 0;
         
-        const textNotice = `...`; // Giữ nguyên đoạn text thông báo
+        const textNotice = `A🔔 NHẮC KÊ KHAI DOANH THU ĐỊNH KỲ
+===================================
+🏢 Cơ sở: ${S.cfg.name || 'Chưa cập nhật'}
+🆔 Mã số thuế: ${S.cfg.tax || 'Chưa cập nhật'}
+📅 Trạng thái: Hạn nộp báo cáo còn lại ${conLai > 0 ? conLai : 0} ngày.
+===================================
+✔️ Hướng dẫn quyết toán hành chính:
+1. Chốt dữ liệu in phôi mẫu S1a-HKD từ hệ thống.
+2. Điền thông tin thu nhập lên tờ khai mẫu số 01/CNKD.
+3. Gửi tờ khai điện tử thông qua App eTax Mobile của Tổng cục Thuế.`;
         document.getElementById('notifBox').innerText = textNotice;
 
         const sel = document.getElementById('selPrint');
-        let selHtml = '<option value="all">Tất cả kỳ</option>';
+        let selHtml = '<option value="all">Tất cả kỳ phát sinh</option>';
         periods.forEach(p => { selHtml += `<option value="${p}">Tháng ${p}</option>`; });
         sel.innerHTML = selHtml;
     }
@@ -487,7 +521,7 @@
 
     function copyNotification() {
         navigator.clipboard.writeText(document.getElementById('notifBox').innerText);
-        alert('✨ Đã sao chép văn bản nhắc thuế vào khay nhớ tạm!');
+        alert('✨ Đã sao chép văn bản nhắc thuế vào khay nhớ tạm thành công!');
     }
 
     function exportJSON() {
@@ -508,20 +542,19 @@
                 if(parsed.cfg) S.cfg = parsed.cfg;
                 if(parsed.entries) S.entries = parsed.entries;
                 persist(); load(); renderAll(); fillCfgForm();
-                alert('Khôi phục dữ liệu thành công!');
-            } catch (err) { alert('File không đúng cấu hình chuẩn JSON.'); }
+                alert('Khôi phục cấu trúc dữ liệu thành công!');
+            } catch (err) { alert('Tệp tin khôi phục không đúng cấu trúc định dạng JSON.'); }
         };
         reader.readAsText(file);
     }
 
     function clearAll() {
-        if (!confirm('Hành động này xóa sạch toàn bộ dữ liệu hiện tại, bạn chắc chứ?')) return;
+        if (!confirm('Cảnh báo: Thao tác này sẽ xóa sạch toàn bộ cơ sở dữ liệu hiện tại, bạn chắc chứ?')) return;
         localStorage.removeItem(LS_KEY);
         S.entries = []; S.cfg = { name:'', addr:'', tax:'', loc:'', method:'old' };
         renderAll(); fillCfgForm();
     }
 
-    // TÍNH NĂNG IN PHÔI CHUẨN XÁC NGUYÊN VĂN THEO THÔNG TƯ 88/2021/TT-BTC
     function doPrint() {
         const mode = document.getElementById('selPrint').value;
         let pool = S.entries;
@@ -543,27 +576,26 @@
         document.getElementById('printContent').innerHTML = `
             <div class="ph">
                 <div class="pl">
-                    <p><strong>NNT:</strong> ${S.cfg.name || '...........................................'}</p>
-                    <p><strong>MST:</strong> ${S.cfg.tax || '...........................................'}</p>
+                    <p><strong>Người nộp thuế:</strong> ${S.cfg.name || '...........................................'}</p>
+                    <p><strong>Mã số thuế:</strong> ${S.cfg.tax || '...........................................'}</p>
                     <p><strong>Địa chỉ:</strong> ${S.cfg.addr || '...........................................'}</p>
                 </div>
                 <div class="pr">
                     <div class="mau">Mẫu số S1a-HKD</div>
-                    <p>(Ban hành kèm theo Thông tư số 88/2021/TT-BTC<br>ngày 11/10/2021 của Bộ Tài chính)</p>
+                    <p>(Ban hành kèm theo Thông tư số 88/2021/TT-BTC)</p>
                 </div>
             </div>
             <div class="tity">SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ</div>
-            <div class="cc" style="margin-bottom:12pt;">Kỳ báo cáo kết xuất: ${mode==='all'?'Tất cả các kỳ': 'Tháng ' + mode}</div>
+            <div class="cc" style="margin-bottom:15px;">Kỳ báo cáo kết xuất: ${mode==='all'?'Tất cả các kỳ': 'Tháng ' + mode}</div>
             <table>
-                <thead><tr><th style="width:7%">STT</th><th style="width:18%">Ngày ghi sổ</th><th>Diễn giải nội dung giao dịch</th><th style="width:20%">Doanh thu</th><th style="width:15%">Ký nhận</th></tr></thead>
+                <thead><tr><th>STT</th><th>Ngày ghi sổ</th><th>Diễn giải nội dung giao dịch</th><th>Doanh thu</th><th>Ký nhận</th></tr></thead>
                 <tbody>
                     ${rowsHtml || '<tr><td colspan="5" class="cc">Không có phát sinh dữ liệu trong kỳ</td></tr>'}
-                    <tr class="tot"><td colspan="3" class="cc">TỔNG CỘNG DOANH THU PHÁT SINH TRONG KỲ</td><td class="cr">${totalSum.toLocaleString('vi-VN')} đ</td><td></td></tr>
+                    <tr class="tot"><td colspan="3" class="cc">TỔNG CỘNG DOANH THU PHÁT SINH</td><td class="cr">${totalSum.toLocaleString('vi-VN')} đ</td><td></td></tr>
                 </tbody>
             </table>
-            
             <div class="foot">
-                <p style="font-style:italic; margin-bottom: 5pt;">Ngày ...... tháng ...... năm 20...</p>
+                <p style="font-style:italic; margin-bottom: 5px;">Ngày ...... tháng ...... năm 20...</p>
                 <p style="font-weight:bold; text-transform: uppercase;">NGƯỜI ĐẠI DIỆN HỘ KINH DOANH/CÁ NHÂN KINH DOANH</p>
                 <p style="font-style:italic; color:#555;">(Ký, ghi rõ họ tên, đóng dấu (nếu có))</p>
             </div>`;
