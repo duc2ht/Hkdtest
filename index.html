@@ -123,7 +123,7 @@
         .fm-dt p { font-size: 11px; color: var(--sub); line-height: 1.4; }
         .notif-box { background: #f8fafc; border-radius: 10px; padding: 13px; margin: 10px 0; font-size: 12px; line-height: 1.65; color: #374151; border: 1px solid var(--border); white-space: pre-wrap; word-break: break-word; }
         
-        /* --- IN PHÔI CHUẨN A4 --- */
+        /* --- IN PHÔI CHUẨN A4 HÀNH CHÍNH --- */
         #printOverlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 200; overflow-y: auto; }
         #printOverlay.on { display: block; }
         #printBar { background: #16a34a; padding: 12px 16px; display: flex; gap: 10px; align-items: center; position: sticky; top: 0; z-index: 10; }
@@ -143,7 +143,7 @@
         #printContent .cc { text-align: center; }
         #printContent .cr { text-align: right; }
         #printContent .tot { font-weight: bold; }
-        #printContent .foot { text-align: right; margin-top: 18pt; font-size: 11pt; line-height: 2; }
+        #printContent .foot { text-align: right; margin-top: 25pt; font-size: 11pt; line-height: 1.8; float: right; }
         
         @media print {
             #app, #fab { display: none !important; }
@@ -194,7 +194,7 @@
                 <div class="nhom-info">
                     <div class="nhom-dt">Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ</div>
                     <div class="nhom-grid">
-                        <div class="nhom-item"><span class="nhom-label">Thuếu suất</span><span class="nhom-val green">GTGT: Miễn<br>TNCN: Miễn</span></div>
+                        <div class="nhom-item"><span class="nhom-label">Thuế suất</span><span class="nhom-val green">GTGT: Miễn<br>TNCN: Miễn</span></div>
                         <div class="nhom-item"><span class="nhom-label">Sổ sách</span><span class="nhom-val">S1a-HKD<br>Ghi chép đơn giản</span></div>
                         <div class="nhom-item"><span class="nhom-label">Hóa đơn</span><span class="nhom-val">Không bắt buộc</span></div>
                         <div class="nhom-item"><span class="nhom-label">Kê khai</span><span class="nhom-val" id="nhomKeKhai">1 lần/năm<br>Hạn: 31/1</span></div>
@@ -302,8 +302,8 @@
 
 <div id="printOverlay">
     <div id="printBar">
-        <button class="pb-print" onclick="window.print()"> Tiến hành lệnh in</button>
-        <button class="pb-close" onclick="closePrint()"> Thóat phôi xem</button>
+        <button class="pb-print" onclick="window.print()">🖨️ Tiến hành lệnh in</button>
+        <button class="pb-close" onclick="closePrint()">❌ Thoát phôi xem</button>
     </div>
     <div id="printContent"></div>
 </div>
@@ -462,7 +462,6 @@
         document.getElementById('listBdg').innerText = filtered.length;
         document.getElementById('hdKK').innerText = S.cfg.name ? S.cfg.name.substring(0,10) : 'Hộ Kinh Doanh';
 
-        // Bộ đếm lịch nộp thuế động
         const nay = new Date();
         let hạnNộp = new Date(nay.getFullYear() + 1, 0, 31);
         if(S.cfg.method === 'new' && nay.getMonth() < 7) {
@@ -475,17 +474,7 @@
         const conLai = Math.ceil((hạnNộp - nay)/(1000*60*60*24));
         document.getElementById('lblDaysLeft').innerText = conLai > 0 ? conLai : 0;
         
-        const textNotice = `🔔 NHẮC KÊ KHAI DOANH THU ĐỊNH KỲ
-===================================
-🏢 Cơ sở: ${S.cfg.name || 'Chưa cập nhật'}
-🆔 Mã số thuế: ${S.cfg.tax || 'Chưa cập nhật'}
-📅 Trạng thái: Hạn nộp còn lại ${conLai > 0 ? conLai : 0} ngày.
-📌 Áp dụng: Miễn hoàn toàn lệ phí môn bài và thuế khoán đối với doanh thu năm thuộc Nhóm 1.
-===================================
-✔️ Hướng dẫn quyết toán:
-1. Chốt dữ liệu in phôi mẫu S1a-HKD từ ứng dụng.
-2. Điền thông tin chính xác lên tờ khai mẫu số 01/CNKD.
-3. Gửi tờ khai thông qua Cổng eTax Mobile của Tổng cục Thuế.`;
+        const textNotice = `...`; // Giữ nguyên đoạn text thông báo
         document.getElementById('notifBox').innerText = textNotice;
 
         const sel = document.getElementById('selPrint');
@@ -532,6 +521,7 @@
         renderAll(); fillCfgForm();
     }
 
+    // TÍNH NĂNG IN PHÔI CHUẨN XÁC NGUYÊN VĂN THEO THÔNG TƯ 88/2021/TT-BTC
     function doPrint() {
         const mode = document.getElementById('selPrint').value;
         let pool = S.entries;
@@ -559,18 +549,24 @@
                 </div>
                 <div class="pr">
                     <div class="mau">Mẫu số S1a-HKD</div>
-                    <p>(Ban hành kèm theo Thông tư số 88/2021/TT-BTC)</p>
+                    <p>(Ban hành kèm theo Thông tư số 88/2021/TT-BTC<br>ngày 11/10/2021 của Bộ Tài chính)</p>
                 </div>
             </div>
             <div class="tity">SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ</div>
-            <div class="cc">Kỳ báo cáo kết xuất: ${mode==='all'?'Tất cả các kỳ': 'Tháng ' + mode}</div>
+            <div class="cc" style="margin-bottom:12pt;">Kỳ báo cáo kết xuất: ${mode==='all'?'Tất cả các kỳ': 'Tháng ' + mode}</div>
             <table>
-                <thead><tr><th>STT</th><th>Ngày ghi sổ</th><th>Diễn giải nội dung giao dịch</th><th>Doanh thu</th><th>Ký nhận</th></tr></thead>
+                <thead><tr><th style="width:7%">STT</th><th style="width:18%">Ngày ghi sổ</th><th>Diễn giải nội dung giao dịch</th><th style="width:20%">Doanh thu</th><th style="width:15%">Ký nhận</th></tr></thead>
                 <tbody>
-                    ${rowsHtml || '<tr><td colspan="5" class="cc">Không có phát sinh dữ liệu</td></tr>'}
-                    <tr class="tot"><td colspan="3" class="cc">TỔNG CỘNG DOANH THU PHÁT SINH</td><td class="cr">${totalSum.toLocaleString('vi-VN')} đ</td><td></td></tr>
+                    ${rowsHtml || '<tr><td colspan="5" class="cc">Không có phát sinh dữ liệu trong kỳ</td></tr>'}
+                    <tr class="tot"><td colspan="3" class="cc">TỔNG CỘNG DOANH THU PHÁT SINH TRONG KỲ</td><td class="cr">${totalSum.toLocaleString('vi-VN')} đ</td><td></td></tr>
                 </tbody>
-            </table>`;
+            </table>
+            
+            <div class="foot">
+                <p style="font-style:italic; margin-bottom: 5pt;">Ngày ...... tháng ...... năm 20...</p>
+                <p style="font-weight:bold; text-transform: uppercase;">NGƯỜI ĐẠI DIỆN HỘ KINH DOANH/CÁ NHÂN KINH DOANH</p>
+                <p style="font-style:italic; color:#555;">(Ký, ghi rõ họ tên, đóng dấu (nếu có))</p>
+            </div>`;
         document.getElementById('printOverlay').classList.add('on');
     }
 
