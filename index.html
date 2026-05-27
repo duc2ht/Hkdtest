@@ -11,188 +11,142 @@
             --bg-color: #f5f6fa;
             --card-blue: #1e3c96;
             --text-dark: #2f3640;
+            --success-color: #4cd137;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 80px; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            padding-bottom: 70px;
-        }
-
-        /* Header bám đỉnh */
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+        header { background-color: var(--primary-color); color: white; padding: 15px; position: sticky; top: 0; z-index: 100; }
         header h2 { font-size: 16px; display: flex; align-items: center; gap: 8px; }
         header p { font-size: 12px; opacity: 0.8; margin-top: 4px; }
-        .status-dot { width: 8px; height: 8px; background: #4cd137; border-radius: 50%; display: inline-block; }
+        .status-dot { width: 8px; height: 8px; background: var(--success-color); border-radius: 50%; display: inline-block; }
 
-        /* Khung container chính cho các Tab */
-        .tab-content {
-            padding: 15px;
-            display: none;
-        }
+        .tab-content { padding: 15px; display: none; }
         .tab-content.active { display: block; }
 
-        /* Widget Doanh Thu (Thẻ Đỏ giống ảnh) */
+        /* Widget Doanh Thu màu đỏ chuẩn */
         .revenue-card {
-            background: linear-gradient(135deg, #b71c1c, #e53935);
-            color: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
+            background: linear-gradient(135deg, #b71c1c, #e53935); color: white;
+            border-radius: 15px; padding: 20px; margin-bottom: 20px; position: relative;
             box-shadow: 0 4px 15px rgba(183, 28, 28, 0.2);
         }
         .revenue-card h3 { font-size: 14px; opacity: 0.9; font-weight: normal; }
         .revenue-card .amount { font-size: 28px; font-weight: bold; margin: 10px 0; }
-        .revenue-card .money-bag { position: absolute; right: 20px; bottom: 15px; font-size: 40px; opacity: 0.3; }
+        .revenue-card .money-bag { position: absolute; right: 20px; bottom: 15px; font-size: 45px; opacity: 0.25; }
 
-        /* Thẻ tính năng chung */
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .card-title { font-weight: bold; margin-bottom: 12px; font-size: 14px; color: #57606f; display: flex; align-items: center; gap: 8px; }
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .card-title { font-weight: bold; margin-bottom: 12px; font-size: 14px; color: #2f3640; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f2f6; padding-bottom: 8px; }
 
-        /* Form Nhập Liệu */
+        /* Khung xanh hiển thị thông tin Nhóm Thuế */
+        .tax-group-card { background: linear-gradient(135deg, #1e3c96, #2a52be); color: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; }
+        .tax-badge { background: white; color: var(--card-blue); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; }
+        .tax-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .tax-box { background: rgba(255,255,255,0.12); padding: 10px; border-radius: 8px; font-size: 12px; }
+        .tax-box div:first-child { opacity: 0.7; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
+        .tax-box div:last-child { font-weight: bold; font-size: 13px; color: white; }
+        .tax-box.highlight div:last-child { color: #55efc4; }
+
+        /* Lịch đếm ngược dạng badge xanh giống ảnh 2 */
+        .countdown-banner { background: linear-gradient(135deg, #2980b9, #2c3e50); color: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .countdown-badge { background: #fff; color: #e74c3c; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: bold; margin-top: 5px; display: inline-block; border: 1px solid #e74c3c; }
+
+        /* List giao dịch */
+        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f2f6; }
+        .transaction-item:last-child { border-bottom: none; }
+        .btn-delete { color: #e74c3c; background: none; border: none; cursor: pointer; padding: 5px; }
+
+        /* Mẫu văn bản luật gợi ý giống ảnh 3 */
+        .law-badge { background: #e1b12c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        .law-item { display: flex; align-items: start; gap: 10px; margin-bottom: 12px; font-size: 13px; }
+        .law-code { background: #f1f2f6; color: var(--card-blue); font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 11px; white-space: nowrap; }
+
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #747d8c; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ced6e0; border-radius: 8px; font-size: 14px; outline: none; }
+        .form-group label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 6px; color: #747d8c; }
+        .form-control { width: 100%; padding: 11px; border: 1px solid #ced6e0; border-radius: 8px; font-size: 14px; outline: none; }
         .form-control:focus { border-color: var(--primary-color); }
 
-        /* Các nút bấm */
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; display: inline-block; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-secondary { background-color: #f1f2f6; color: var(--text-dark); margin-top: 10px; }
         .btn-blue { background-color: var(--card-blue); color: white; }
 
-        /* Floating Action Button (Nút cộng đỏ tròn) */
-        .fab {
-            position: fixed;
-            right: 20px;
-            bottom: 80px;
-            width: 56px;
-            height: 56px;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            cursor: pointer;
-            z-index: 99;
-        }
+        .fab { position: fixed; right: 20px; bottom: 85px; width: 56px; height: 56px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 99; }
+        .textarea-preview { background: #f8f9fa; border: 1px dashed #cbd5e1; padding: 12px; font-family: monospace; font-size: 12px; white-space: pre-wrap; border-radius: 8px; margin-top: 10px; color: #333; line-height: 1.5; }
 
-        /* Thẻ xanh bên Lịch thuế */
-        .tax-group-card {
-            background: linear-gradient(135deg, #1e3c96, #2a52be);
-            color: white;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .tax-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .tax-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; font-size: 12px; }
-        .tax-box div:last-child { font-weight: bold; margin-top: 4px; color: #4cd137; }
-
-        /* Giao diện Nhắc Thuế */
-        .textarea-preview { background: #f8f9fa; border: 1px dashed #ccc; padding: 10px; font-family: monospace; font-size: 12px; white-space: pre-wrap; border-radius: 6px; margin-top: 10px; }
-
-        /* Thanh điều hướng dưới cùng (Bottom Navigation) */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: white;
-            display: flex;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 100;
-        }
-        .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #a4b0be;
-            font-size: 11px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .nav-item i { font-size: 20px; margin-bottom: 2px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background-color: white; display: flex; box-shadow: 0 -3px 10px rgba(0,0,0,0.05); z-index: 100; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #a4b0be; font-size: 11px; cursor: pointer; }
+        .nav-item i { font-size: 20px; margin-bottom: 3px; }
         .nav-item.active { color: var(--primary-color); font-weight: bold; }
 
-        /* Modal thêm giao dịch */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; align-items:center; justify-content:center; }
-        .modal-content { background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; }
+        .modal-content { background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
     <header>
         <h2>📋 SỔ DOANH THU S1a-HKD</h2>
-        <p><span class="status-dot"></span> Dữ liệu tự động lưu vào trình duyệt của bạn</p>
+        <p><span class="status-dot"></span> Dữ liệu tự động lưu khi bạn thêm giao dịch</p>
     </header>
 
     <div id="tab-danhsach" class="tab-content active">
         <div class="revenue-card">
-            <h3>Tổng doanh thu tháng này</h3>
+            <h3>Tổng doanh thu năm nay</h3>
             <div class="amount" id="txt-tong-doanhthu">0 đ</div>
             <p id="txt-so-giaodich">0 giao dịch</p>
             <div class="money-bag"><i class="fa-solid fa-sack-dollar"></i></div>
         </div>
 
         <div class="card">
-            <div class="card-title">Giao dịch trong kỳ</div>
-            <div id="list-giao-dich" style="font-size: 14px; color: #747d8c; text-align: center; padding: 20px 0;">
-                <i class="fa-regular fa-folder-open" style="font-size: 40px; margin-bottom: 10px; display:block;"></i>
-                Chưa có doanh thu nào được ghi nhận. Nhấn nút + bên dưới để thêm mới.
-            </div>
+            <div class="card-title">Giao dịch trong kỳ <span id="badge-count" style="margin-left:auto; background:#ff7675; color:white; padding:2px 6px; border-radius:10px; font-size:11px;">0</span></div>
+            <div id="list-giao-dich"></div>
         </div>
     </div>
 
     <div id="tab-lichthue" class="tab-content">
         <div class="tax-group-card">
-            <span style="background:white; color:var(--card-blue); padding:2px 8px; border-radius:10px; font-size:11px; font-weight:bold;">NHÓM 1</span>
-            <p style="margin-top:5px; font-size:13px;">Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ</p>
+            <span class="tax-badge" id="tax-group-title">NHÓM 1</span>
+            <p style="margin-top:6px; font-size:13px;" id="tax-group-desc">Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ</p>
             <div class="tax-grid">
-                <div class="tax-box"><div>THUẾ</div><div>GTGT & TNCN: Miễn</div></div>
-                <div class="tax-box"><div>SỔ SÁCH</div><div>S1a-HKD Đơn giản</div></div>
-                <div class="tax-box"><div>HÓA ĐƠN</div><div>Không bắt buộc</div></div>
-                <div class="tax-box"><div>KÊ KHAI</div><div>1 lần / năm</div></div>
+                <div class="tax-box highlight"><div>THUẾ GTGT</div><div id="lbl-tax-gtgt">Miễn</div></div>
+                <div class="tax-box highlight"><div>THUẾ TNCN</div><div id="lbl-tax-tncn">Miễn</div></div>
+                <div class="tax-box"><div>SỔ SÁCH</div><div id="lbl-so-sach">S1a-HKD Ghi chép đơn giản</div></div>
+                <div class="tax-box"><div>HÓA ĐƠN</div><div id="lbl-hoa-don">Không bắt buộc</div></div>
+            </div>
+        </div>
+
+        <div class="countdown-banner">
+            <div>
+                <strong style="font-size:15px; display:block;" id="lbl-lich-title">Kê khai DT cả năm 2026</strong>
+                <span style="font-size:12px; opacity:0.9;" id="lbl-lich-subtitle">Khai tổng doanh thu 01/01-31/12. Hạn: 31/1/năm sau</span>
+                <br><span class="countdown-badge" id="lbl-days-left"><i class="fa-regular fa-calendar"></i> Còn -- ngày</span>
+            </div>
+            <div style="font-size:28px; font-weight:bold; background:rgba(255,255,255,0.2); padding:10px; border-radius:10px;">31/1</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📑 Mẫu kê khai gợi ý</div>
+            <div class="law-item">
+                <span class="law-code">01/CNKD</span>
+                <div>
+                    <strong>Tờ khai thuế GTGT & TNCN</strong>
+                    <p style="font-size:12px; color:#666;">Kê khai doanh thu thuế GTGT và TNCN hàng năm hoặc quý theo NĐ 68/2025 và TT 18/TT-BTC.</p>
+                </div>
+            </div>
+            <div class="law-item">
+                <span class="law-code">01-1/CNKD</span>
+                <div>
+                    <strong>Phụ lục bảng kê doanh thu</strong>
+                    <p style="font-size:12px; color:#666;">Chi tiết doanh thu theo từng loại hàng hóa/dịch vụ. Đính kèm khi có nhiều nhóm doanh thu.</p>
+                </div>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-title"><i class="fa-solid fa-bell text-danger"></i> Tạo thông báo nhắc thuế</div>
-            <p style="font-size:13px; color:#666;">Nội dung soạn sẵn để gửi qua Zalo / Tin nhắn:</p>
-            <div class="textarea-preview" id="nhac-thue-text">
-🔔 NHẮC KÊ KHAI DOANH THU - NHÓM 1 HKD
-===================================
-Hạn nộp: 31/01 năm sau
-Trạng thái: Miễn GTGT và TNCN
-Căn cứ: Nghị định 141/2026/NĐ-CP
-            </div>
+            <div class="card-title"><i class="fa-solid fa-bell" style="color:#e1b12c"></i> Tạo thông báo nhắc thuế</div>
+            <p style="font-size:12px; color:#666;">Tạo nội dung nhắc nộp thuế để gửi qua Zalo / tin nhắn:</p>
+            <div class="textarea-preview" id="nhac-thue-text"></div>
             <button class="btn btn-blue" style="margin-top:10px;" onclick="copyNotification()">
                 <i class="fa-regular fa-copy"></i> Sao chép thông báo
             </button>
@@ -200,24 +154,31 @@ Căn cứ: Nghị định 141/2026/NĐ-CP
     </div>
 
     <div id="tab-xuatfile" class="tab-content">
-        <div class="card" style="text-align:center; padding: 30px 15px;">
-            <i class="fa-solid fa-print" style="font-size: 50px; color:#57606f; margin-bottom: 15px;"></i>
+        <div class="card" style="text-align:center; padding: 40px 15px;">
+            <i class="fa-solid fa-print" style="font-size: 55px; color:#b71c1c; margin-bottom: 15px;"></i>
             <h3>In mẫu S1a-HKD</h3>
-            <p style="font-size:13px; color:#747d8c; margin: 10px 0 20px;">Tạo trang in chuẩn khổ A4 ngay trên trình duyệt điện thoại</p>
-            <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-eye"></i> Xem & In mẫu</button>
+            <p style="font-size:13px; color:#747d8c; margin: 10px 0 25px;">Tạo trang in chuẩn khổ giấy A4 ngay trong trình duyệt điện thoại</p>
+            <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Xem & In ngay</button>
         </div>
     </div>
 
     <div id="tab-caidat" class="tab-content">
         <div class="card">
-            <div class="card-title">🏢 Thông tin Hộ kinh doanh</div>
+            <div class="card-title">🏢 Thông tin hộ kinh doanh</div>
             <div class="form-group">
                 <label>TÊN HỘ / CÁ NHÂN KINH DOANH</label>
-                <input type="text" class="form-control" id="cfg-name" placeholder="Nhập tên...">
+                <input type="text" class="form-control" id="cfg-name" placeholder="Nhập tên hộ kinh doanh...">
             </div>
             <div class="form-group">
                 <label>MÃ SỐ THUẾ</label>
-                <input type="text" class="form-control" id="cfg-mst" placeholder="0123456789">
+                <input type="text" class="form-control" id="cfg-mst" placeholder="Nhập mã số thuế...">
+            </div>
+            <div class="form-group">
+                <label>PHƯƠNG PHÁP KÊ KHAI (LỊCH THUẾ ĐỘNG)</label>
+                <select class="form-control" id="cfg-method" onchange="saveConfig()">
+                    <option value="1">HKD đã hoạt động từ năm trước (Kê khai 1 lần: 31/1)</option>
+                    <option value="2">HKD mới thành lập trong năm (Kê khai 2 lần: 31/7 và 31/1)</option>
+                </select>
             </div>
             <button class="btn btn-primary" onclick="saveConfig()"><i class="fa-regular fa-floppy-disk"></i> Lưu thông tin</button>
         </div>
@@ -227,7 +188,7 @@ Căn cứ: Nghị định 141/2026/NĐ-CP
             <button class="btn btn-secondary" onclick="exportJSON()"><i class="fa-solid fa-file-export"></i> Xuất file sao lưu (JSON)</button>
             <input type="file" id="import-file" style="display:none" onchange="importJSON(this)">
             <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()"><i class="fa-solid fa-file-import"></i> Nhập dữ liệu từ file JSON</button>
-            <button class="btn btn-secondary" style="color:red;" onclick="clearAllData()"><i class="fa-regular fa-trash-can"></i> Xóa toàn bộ dữ liệu</button>
+            <button class="btn btn-secondary" style="color:#e74c3c; background:#fff1f0;" onclick="clearAllData()"><i class="fa-regular fa-trash-can"></i> Xóa toàn bộ dữ liệu ứng dụng</button>
         </div>
     </div>
 
@@ -235,163 +196,68 @@ Căn cứ: Nghị định 141/2026/NĐ-CP
 
     <div class="modal" id="add-modal">
         <div class="modal-content">
-            <h3 style="margin-bottom:15px;">Thêm doanh thu mới</h3>
+            <h3 style="margin-bottom:15px; font-size:16px;">Thêm giao dịch doanh thu</h3>
             <div class="form-group">
-                <label>Số tiền (VNĐ)</label>
-                <input type="number" class="form-control" id="transaction-amount" placeholder="Ví dụ: 500000">
+                <label>SỐ TIỀN PHÁT SINH (VNĐ)</label>
+                <input type="number" class="form-control" id="transaction-amount" placeholder="Nhập số tiền phát sinh...">
             </div>
             <div class="form-group">
-                <label>Nội dung kinh doanh</label>
-                <input type="text" class="form-control" id="transaction-note" placeholder="Ví dụ: Bán hàng tạp hóa">
+                <label>NỘI DUNG / DIỄN GIẢI GIAO DỊCH</label>
+                <input type="text" class="form-control" id="transaction-note" placeholder="Ví dụ: Doanh thu bán linh kiện máy tính">
             </div>
             <button class="btn btn-primary" onclick="addTransaction()">Lưu giao dịch</button>
-            <button class="btn btn-secondary" onclick="closeModal()">Đóng lại</button>
+            <button class="btn btn-secondary" onclick="closeModal()">Hủy bỏ</button>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab(event, 'tab-danhsach')">
-            <i class="fa-regular fa-clipboard"></i>Danh sách
-        </div>
-        <div class="nav-item" onclick="switchTab(event, 'tab-lichthue')">
-            <i class="fa-regular fa-calendar-days"></i>Lịch thuế
-        </div>
-        <div class="nav-item" onclick="switchTab(event, 'tab-xuatfile')">
-            <i class="fa-solid fa-file-arrow-down"></i>Xuất file
-        </div>
-        <div class="nav-item" onclick="switchTab(event, 'tab-caidat')">
-            <i class="fa-solid fa-gear"></i>Cài đặt
-        </div>
+        <div class="nav-item active" onclick="switchTab(event, 'tab-danhsach')"><i class="fa-regular fa-clipboard"></i>Danh sách</div>
+        <div class="nav-item" onclick="switchTab(event, 'tab-lichthue')"><i class="fa-regular fa-calendar-days"></i>Lịch thuế</div>
+        <div class="nav-item" onclick="switchTab(event, 'tab-xuatfile')"><i class="fa-solid fa-file-arrow-down"></i>Xuất file</div>
+        <div class="nav-item" onclick="switchTab(event, 'tab-caidat')"><i class="fa-solid fa-gear"></i>Cài đặt</div>
     </nav>
 
     <script>
-        // Khởi tạo biến lưu trữ
         let appData = {
-            config: { name: '', mst: '' },
+            config: { name: 'Hộ kinh doanh cá thể', mst: 'Chưa cập nhật', method: '1' },
             transactions: []
         };
 
-        // Hàm tải dữ liệu từ localStorage lên khi mở App
         function loadData() {
-            const local = localStorage.getItem('hkd_data');
+            const local = localStorage.getItem('hkd_data_pro');
             if(local) {
                 appData = JSON.parse(local);
                 document.getElementById('cfg-name').value = appData.config.name || '';
                 document.getElementById('cfg-mst').value = appData.config.mst || '';
+                document.getElementById('cfg-method').value = appData.config.method || '1';
             }
-            renderTransactions();
+            renderAll();
         }
 
-        // Chuyển đổi qua lại giữa các Tab giao diện
         function switchTab(event, tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        // Đóng/Mở Modal nhập liệu
         function openModal() { document.getElementById('add-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('add-modal').style.display = 'none'; }
 
-        // Thêm một giao dịch thu tiền mới
         function addTransaction() {
             const amount = parseFloat(document.getElementById('transaction-amount').value);
             const note = document.getElementById('transaction-note').value;
-
-            if(!amount || amount <= 0) { alert('Vui lòng nhập số tiền hợp lệ'); return; }
+            if(!amount || amount <= 0) { alert('Số tiền không hợp lệ'); return; }
 
             appData.transactions.push({
                 id: Date.now(),
                 amount: amount,
-                note: note || 'Không có ghi chú',
+                note: note || 'Doanh thu bán hàng phát sinh',
                 date: new Date().toLocaleDateString('vi-VN')
             });
 
-            localStorage.setItem('hkd_data', JSON.stringify(appData));
-            renderTransactions();
+            saveToLocal();
+            renderAll();
             closeModal();
-            // Reset input form
             document.getElementById('transaction-amount').value = '';
-            document.getElementById('transaction-note').value = '';
-        }
-
-        // Cập nhật giao diện tiền tệ hiển thị
-        function renderTransactions() {
-            const listContainer = document.getElementById('list-giao-dich');
-            let total = 0;
-
-            if(appData.transactions.length === 0) {
-                listContainer.innerHTML = `<i class="fa-regular fa-folder-open" style="font-size: 40px; margin-bottom: 10px; display:block;"></i> Chưa có doanh thu nào.`;
-            } else {
-                let html = '<ul style="list-style:none; text-align:left;">';
-                appData.transactions.forEach(t => {
-                    total += t.amount;
-                    html += `<li style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:between; align-items:center;">
-                                <div><strong>${t.amount.toLocaleString('vi-VN')} đ</strong><br><small style="color:#888">${t.note} (${t.date})</small></div>
-                             </li>`;
-                });
-                html += '</ul>';
-                listContainer.innerHTML = html;
-            }
-
-            document.getElementById('txt-tong-doanhthu').innerText = total.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('txt-so-giaodich').innerText = appData.transactions.length + ' giao dịch';
-        }
-
-        // Lưu thông tin hộ kinh doanh cá nhân
-        function saveConfig() {
-            appData.config.name = document.getElementById('cfg-name').value;
-            appData.config.mst = document.getElementById('cfg-mst').value;
-            localStorage.setItem('hkd_data', JSON.stringify(appData));
-            alert('Đã lưu thông tin cấu hình thành công!');
-        }
-
-        // Sao lưu xuất dữ liệu ra file JSON giống app mẫu
-        function exportJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "backup_hkd_s1a.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
-        // Nhập file sao lưu JSON quay ngược lại app
-        function importJSON(input) {
-            const file = input.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    appData = JSON.parse(e.target.result);
-                    localStorage.setItem('hkd_data', JSON.stringify(appData));
-                    loadData();
-                    alert('Khôi phục dữ liệu thành công!');
-                } catch (err) {
-                    alert('File không hợp lệ.');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function clearAllData() {
-            if(confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu? Thao tác này không thể hoàn tác.')) {
-                localStorage.removeItem('hkd_data');
-                appData = { config: { name: '', mst: '' }, transactions: [] };
-                loadData();
-            }
-        }
-
-        function copyNotification() {
-            const text = document.getElementById('nhac-thue-text').innerText;
-            navigator.clipboard.writeText(text);
-            alert('Đã sao chép nội dung thông báo vào khay nhớ tạm!');
-        }
-
-        // Chạy tải dữ liệu khi bật ứng dụng lần đầu
-        window.onload = loadData;
-    </script>
-</body>
-</html>
+            document.getElementById('transaction-note').value =
