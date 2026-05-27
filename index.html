@@ -1,614 +1,1021 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Sổ Doanh Thu S1a-HKD</title>
-    <style>
-        /* --- RESET & VARS CHUẨN MƯỢT --- */
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        :root {
-            --red: #C8102E; --red2: #9b0e24; --red-bg: #fdf0f2;
-            --dark: #1a1a2e; --text: #2d2d3a; --sub: #6b7280;
-            --bg: #f0f2f7; --white: #fff; --border: #e4e7ed;
-            --green: #16a34a; --blue: #1e40af; --blue-bg: #eff6ff;
-            --radius: 14px; --shadow: 0 2px 14px rgba(0,0,0,.06);
-        }
-        body { font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
-        
-        #app { position: fixed; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; background: var(--bg); padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-        
-        /* --- HEADER --- */
-        #hd { background: linear-gradient(135deg, var(--red), var(--red2)); color: #fff; padding: 12px 16px 10px; flex-shrink: 0; z-index: 20; box-shadow: 0 2px 12px rgba(200,16,46,.35); }
-        #hd h1 { font-size: 14px; font-weight: 800; }
-        #hdSub { font-size: 11px; opacity: .82; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
-        #hdKK { background: rgba(255,255,255,.22); border-radius: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
-        .hd-row { display: flex; align-items: center; justify-content: space-between; }
-        .hd-save { font-size: 10px; opacity: .75; margin-top: 4px; display: flex; align-items: center; gap: 5px; }
-        .save-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
-        .save-dot.saving { background: #fbbf24; animation: pulse .8s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-        
-        /* --- SCROLL AREA --- */
-        #scroll { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
-        
-        /* --- BOTTOM NAV (Chỉ gồm 4 mục chính sạch sẽ) --- */
-        #bnav { flex-shrink: 0; display: flex; background: var(--white); border-top: 1px solid var(--border); box-shadow: 0 -2px 14px rgba(0,0,0,.07); }
-        .ni { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 2px 6px; border: none; background: none; font-family: inherit; font-size: 10px; color: var(--sub); cursor: pointer; gap: 3px; min-height: 56px; }
-        .ni.on { color: var(--red); font-weight: 700; }
-        .ni svg { width: 21px; height: 21px; stroke-width: 1.8; fill: none; stroke: currentColor; }
-        .ni.on svg { stroke-width: 2.3; }
-        
-        /* --- FAB --- */
-        #fab { position: fixed; bottom: calc(56px + env(safe-area-inset-bottom) + 14px); right: 18px; width: 54px; height: 54px; border-radius: 50%; background: var(--red); color: #fff; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 4px 20px rgba(200,16,46,.45); display: flex; align-items: center; justify-content: center; z-index: 30; }
-        #fab:active { transform: scale(.93); }
-        
-        /* --- TAB PANELS --- */
-        .tab { display: none; padding: 14px 14px 0; }
-        .tab.on { display: block; }
-        
-        /* --- COMPONENT STYLES --- */
-        .ps { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-        .ps::-webkit-scrollbar { display: none; }
-        .pc { padding: 6px 15px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--sub); font-weight: 600; flex-shrink: 0; -webkit-appearance: none; }
-        .pc.on { background: var(--red); border-color: var(--red); color: #fff; }
-        
-        .sum { background: linear-gradient(135deg,var(--red),var(--red2)); color: #fff; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .sum-num { font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
-        .sum-lbl { font-size: 11px; opacity: .82; margin-bottom: 3px; }
-        .sum-cnt { font-size: 11px; opacity: .68; margin-top: 3px; }
-        
-        .sec { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-        .sec-t { font-size: 13px; font-weight: 700; }
-        .bdg { background: var(--red-bg); color: var(--red); font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 10px; }
-        
-        .ec { background: var(--white); border-radius: 12px; padding: 11px 12px; margin-bottom: 7px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow); border-left: 3px solid transparent; transition: border-color 0.2s; }
-        .ec:active { border-left-color: var(--red); }
-        .db { background: var(--red-bg); color: var(--red); border-radius: 8px; padding: 6px 7px; text-align: center; min-width: 40px; font-weight: 800; font-size: 16px; line-height: 1; flex-shrink: 0; }
-        .db .dm { font-size: 10px; font-weight: 600; color: var(--sub); margin-top: 1px; }
-        .ei { flex: 1; min-width: 0; }
-        .edesc { font-size: 13px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .eamt { font-size: 13px; font-weight: 800; color: var(--green); margin-top: 2px; }
-        .btn-del { border: none; background: none; color: #dc2626; cursor: pointer; padding: 8px; font-size: 14px; flex-shrink: 0; }
-        .mt { text-align: center; padding: 50px 20px; color: var(--sub); }
-        .mt-i { font-size: 56px; margin-bottom: 12px; opacity: .35; }
-        
-        .card { background: var(--white); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
-        .card-t { font-size: 11px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 14px; }
-        
-        /* --- FORM --- */
-        .fg { margin-bottom: 13px; }
-        .fl { display: block; font-size: 11px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-        .fi { width: 100%; padding: 12px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 16px; color: var(--text); background: var(--white); outline: none; -webkit-appearance: none; }
-        .fi:focus { border-color: var(--red); }
-        .fi::placeholder { color: #c4c9d4; }
-        select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%236b7280' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
-        .amt-preview { font-size: 13px; color: var(--green); font-weight: 700; margin-top: 5px; min-height: 18px; }
-        
-        .btn { width: 100%; padding: 13px; border: none; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; display: block; text-align: center; text-decoration: none; -webkit-appearance: none; }
-        .btn-r { background: var(--red); color: #fff; }
-        .btn-b { background: #1e3a5f; color: #fff; }
-        .btn-g { background: var(--bg); color: var(--text); }
-        .btn-danger { background: #fef2f2; color: var(--red); margin-top: 8px; }
-        
-        /* --- MODAL SHEET --- */
-        #modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.48); z-index: 100; align-items: flex-end; justify-content: center; }
-        #modal.on { display: flex; }
-        .sheet { background: var(--white); border-radius: 22px 22px 0 0; padding: 20px 18px; padding-bottom: calc(env(safe-area-inset-bottom) + 32px); width: 100%; max-width: 480px; animation: sheetUp .23s cubic-bezier(0.25, 1, 0.5, 1); max-height: 90vh; overflow-y: auto; }
-        @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
-        .mtitle { font-size: 17px; font-weight: 800; margin-bottom: 16px; }
-        
-        .import-zone { border: 2px dashed var(--border); border-radius: 11px; padding: 18px; text-align: center; color: var(--sub); font-size: 13px; cursor: pointer; margin-bottom: 10px; }
-        
-        /* --- NHÓM HKD & LỊCH THUẾ --- */
-        .nhom-card { background: linear-gradient(135deg,#1e3a5f,#1e40af); color: #fff; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(30,64,175,.3); }
-        .nhom-badge { display: inline-block; background: #fff; color: #1e40af; font-size: 13px; font-weight: 900; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; letter-spacing: .5px; }
-        .nhom-info .nhom-dt { font-size: 12px; opacity: .85; margin-bottom: 12px; font-weight: 600; }
-        .nhom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .nhom-item { background: rgba(255,255,255,.12); border-radius: 10px; padding: 10px 12px; }
-        .nhom-label { display: block; font-size: 10px; font-weight: 700; opacity: .75; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-        .nhom-val { font-size: 12px; font-weight: 700; line-height: 1.5; }
-        .nhom-val.green { color: #86efac; }
-        
-        .dl-card { background: var(--white); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 11px; align-items: flex-start; box-shadow: var(--shadow); border-left: 4px solid #2563eb; }
-        .dl-d { border-radius: 8px; padding: 7px 9px; text-align: center; min-width: 50px; flex-shrink: 0; background: var(--blue-bg); color: var(--blue); }
-        .dl-day { font-size: 22px; font-weight: 800; line-height: 1; }
-        .dl-mon { font-size: 10px; font-weight: 600; margin-top: 1px; }
-        .dl-body h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
-        .dl-body p { font-size: 11.5px; color: var(--sub); line-height: 1.5; }
-        
-        .fm-item { padding: 11px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; }
-        .fm-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .fm-num { background: #1e40af; color: #fff; border-radius: 6px; padding: 4px 8px; font-size: 10px; font-weight: 800; flex-shrink: 0; white-space: nowrap; }
-        .fm-dt h4 { font-size: 12.5px; font-weight: 700; margin-bottom: 2px; }
-        .fm-dt p { font-size: 11px; color: var(--sub); line-height: 1.4; }
-        .notif-box { background: #f8fafc; border-radius: 10px; padding: 13px; margin: 10px 0; font-size: 12px; line-height: 1.65; color: #374151; border: 1px solid var(--border); white-space: pre-wrap; word-break: break-word; }
-        
-        /* --- IN PHÔI CHUẨN ĐÚNG PHÒNG THUẾ --- */
-        #printOverlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 200; overflow-y: auto; }
-        #printOverlay.on { display: block; }
-        #printBar { background: #16a34a; padding: 12px 16px; display: flex; gap: 10px; align-items: center; position: sticky; top: 0; z-index: 10; }
-        #printBar button { padding: 10px 20px; border: none; border-radius: 9px; font-size: 15px; font-weight: 700; cursor: pointer; }
-        .pb-print { background: #fff; color: #16a34a; }
-        .pb-close { background: rgba(255,255,255,.2); color: #fff; }
-        
-        #printContent { padding: 15mm 20mm 15mm 25mm; font-family: "Times New Roman", serif; font-size: 12pt; color: #000; max-width: 210mm; margin: 0 auto; }
-        #printContent .ph { display: flex; justify-content: space-between; margin-bottom: 16pt; }
-        #printContent .pl p { font-size: 11pt; line-height: 1.9; }
-        #printContent .pr { text-align: right; font-size: 10pt; line-height: 1.7; }
-        #printContent .mau { color: #C8102E; font-weight: bold; font-size: 11pt; }
-        #printContent .tity { text-align: center; font-size: 14pt; font-weight: bold; text-transform: uppercase; margin: 8pt 0 4pt; }
-        #printContent table { width: 100%; border-collapse: collapse; margin-top: 6pt; }
-        #printContent th, #printContent td { border: 1px solid black; padding: 4pt 5pt; font-size: 11pt; }
-        #printContent th { text-align: center; font-weight: bold; }
-        #printContent .cc { text-align: center; }
-        #printContent .cr { text-align: right; }
-        #printContent .tot { font-weight: bold; }
-        #printContent .foot { text-align: right; margin-top: 25pt; font-size: 11pt; line-height: 1.8; float: right; }
-        
-        @media print {
-            #app, #fab { display: none !important; }
-            #printOverlay { display: block !important; position: static !important; }
-            #printBar { display: none !important; }
-            #printContent { padding: 0 !important; }
-        }
-        .sp { height: 20px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Sổ Doanh Thu S1a-HKD</title>
+<style>
+/* ─── RESET ─── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+/* ─── VARS ─── */
+:root {
+  --red:#C8102E; --red2:#9b0e24; --red-bg:#fdf0f2;
+  --dark:#1a1a2e; --text:#2d2d3a; --sub:#6b7280;
+  --bg:#f0f2f7; --white:#fff; --border:#e4e7ed;
+  --green:#16a34a; --blue:#1e40af; --blue-bg:#eff6ff;
+  --radius:14px; --shadow:0 2px 14px rgba(0,0,0,.07);
+}
+
+body {
+  font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#app {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ─── HEADER ─── */
+#hd {
+  background: linear-gradient(135deg, var(--red), var(--red2));
+  color: #fff;
+  padding: 12px 16px 10px;
+  flex-shrink: 0;
+  z-index: 20;
+  box-shadow: 0 2px 12px rgba(200,16,46,.4);
+}
+#hd h1 { font-size: 14px; font-weight: 800; }
+#hdSub { font-size: 11px; opacity: .82; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+#hdKK { background: rgba(255,255,255,.22); border-radius: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.hd-row { display: flex; align-items: center; justify-content: space-between; }
+.hd-save { font-size: 10px; opacity: .75; margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+.save-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+.save-dot.saving { background: #fbbf24; animation: pulse .8s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ─── SCROLL ─── */
+#scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 80px;
+}
+
+/* ─── BOTTOM NAV ─── */
+#bnav {
+  flex-shrink: 0;
+  display: flex;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 14px rgba(0,0,0,.07);
+}
+.ni {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 2px 6px;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 9.5px;
+  color: var(--sub);
+  cursor: pointer;
+  gap: 3px;
+  -webkit-appearance: none;
+  min-height: 56px;
+}
+.ni.on { color: var(--red); font-weight: 700; }
+.ni svg { width: 21px; height: 21px; stroke-width: 1.8; fill: none; stroke: currentColor; }
+.ni.on svg { stroke-width: 2.3; }
+
+/* ─── FAB ─── */
+#fab {
+  position: fixed;
+  bottom: calc(56px + env(safe-area-inset-bottom) + 14px);
+  right: 18px;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(200,16,46,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  -webkit-appearance: none;
+  line-height: 1;
+}
+#fab:active { transform: scale(.93); }
+#fab.hide { display: none; }
+
+/* ─── TAB PANELS ─── */
+.tab { display: none; padding: 14px 14px 0; }
+.tab.on { display: block; }
+
+/* ─── PERIOD STRIP ─── */
+.ps { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.ps::-webkit-scrollbar { display: none; }
+.pc { padding: 6px 15px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--sub); font-weight: 600; flex-shrink: 0; -webkit-appearance: none; }
+.pc.on { background: var(--red); border-color: var(--red); color: #fff; }
+
+/* ─── SUM CARD ─── */
+.sum { background: linear-gradient(135deg,var(--red),var(--red2)); color:#fff; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.sum-num { font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
+.sum-lbl { font-size: 11px; opacity: .82; margin-bottom: 3px; }
+.sum-cnt { font-size: 11px; opacity: .68; margin-top: 3px; }
+
+/* ─── SEC ─── */
+.sec { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sec-t { font-size: 13px; font-weight: 700; }
+.bdg { background: var(--red-bg); color: var(--red); font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 10px; }
+
+/* ─── ENTRY CARD ─── */
+.ec { background: var(--white); border-radius: 12px; padding: 11px 12px; margin-bottom: 7px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow); border-left: 3px solid transparent; }
+.ec:active { border-left-color: var(--red); }
+.db { background: var(--red-bg); color: var(--red); border-radius: 8px; padding: 6px 7px; text-align: center; min-width: 40px; font-weight: 800; font-size: 16px; line-height: 1; flex-shrink: 0; }
+.db .dm { font-size: 10px; font-weight: 600; color: var(--sub); margin-top: 1px; }
+.ei { flex: 1; min-width: 0; }
+.edesc { font-size: 13px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.eamt { font-size: 13px; font-weight: 800; color: var(--green); margin-top: 2px; }
+.ea { display: flex; gap: 4px; flex-shrink: 0; }
+.ib { width: 32px; height: 32px; border-radius: 8px; border: none; background: var(--bg); cursor: pointer; font-size: 14px; -webkit-appearance: none; display: flex; align-items: center; justify-content: center; }
+
+/* ─── EMPTY ─── */
+.mt { text-align: center; padding: 50px 20px; color: var(--sub); }
+.mt-i { font-size: 56px; margin-bottom: 12px; opacity: .35; }
+
+/* ─── CARD ─── */
+.card { background: var(--white); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.card-t { font-size: 11px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 14px; }
+
+/* ─── FORM ─── */
+.fg { margin-bottom: 13px; }
+.fl { display: block; font-size: 11px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.fi { width: 100%; padding: 12px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 16px; color: var(--text); background: var(--white); -webkit-appearance: none; font-family: inherit; outline: none; }
+.fi:focus { border-color: var(--red); }
+.fi::placeholder { color: #c4c9d4; }
+select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%236b7280' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.amt-preview { font-size: 13px; color: var(--green); font-weight: 700; margin-top: 5px; min-height: 18px; }
+
+/* ─── BUTTONS ─── */
+.btn { width: 100%; padding: 13px; border: none; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 6px; -webkit-appearance: none; display: block; }
+.btn-r { background: var(--red); color: #fff; }
+.btn-b { background: #1e3a5f; color: #fff; }
+.btn-g { background: var(--bg); color: var(--text); }
+.btn-danger { background: #fef2f2; color: var(--red); margin-top: 8px; }
+
+/* ─── MODAL / BOTTOM SHEET ─── */
+#modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.48); z-index: 100; align-items: flex-end; justify-content: center; }
+#modal.on { display: flex; }
+.sheet { background: var(--white); border-radius: 22px 22px 0 0; padding: 20px 18px; padding-bottom: calc(env(safe-area-inset-bottom) + 32px); width: 100%; max-width: 480px; animation: sheetUp .25s ease; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+@keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
+.mtitle { font-size: 17px; font-weight: 800; margin-bottom: 16px; }
+.import-zone { border: 2px dashed var(--border); border-radius: 11px; padding: 18px; text-align: center; color: var(--sub); font-size: 13px; cursor: pointer; margin-bottom: 10px; -webkit-appearance: none; }
+
+/* ─── NHÓM HKD ─── */
+.nhom-card{background:linear-gradient(135deg,#1e3a5f,#1e40af);color:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(30,64,175,.3)}
+.nhom-badge{display:inline-block;background:#fff;color:#1e40af;font-size:13px;font-weight:900;padding:4px 12px;border-radius:20px;margin-bottom:8px;letter-spacing:.5px}
+.nhom-info .nhom-dt{font-size:12px;opacity:.85;margin-bottom:12px;font-weight:600}
+.nhom-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nhom-item{background:rgba(255,255,255,.12);border-radius:10px;padding:10px 12px}
+.nhom-label{display:block;font-size:10px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.nhom-val{font-size:12px;font-weight:700;line-height:1.5}
+.nhom-val.green{color:#86efac}
+.nhom-val.orange{color:#fdba74}
+.nhom-val.blue{color:#93c5fd}
+
+/* ─── TAX ─── */
+.tax-hd { background: linear-gradient(135deg,#1e3a5f,#2563eb); color:#fff; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.tax-hd h2 { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.tax-hd p { font-size: 11px; opacity: .82; }
+.dl-card { background: var(--white); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 11px; align-items: flex-start; box-shadow: var(--shadow); }
+.dl-card.urgent { border-left: 4px solid #dc2626; }
+.dl-card.warning { border-left: 4px solid #f59e0b; }
+.dl-card.ok { border-left: 4px solid #16a34a; }
+.dl-card.info { border-left: 4px solid #2563eb; }
+.dl-d { border-radius: 8px; padding: 7px 9px; text-align: center; min-width: 50px; flex-shrink: 0; }
+.dl-d.urgent { background: #fef2f2; color: #dc2626; }
+.dl-d.warning { background: #fff7ed; color: #c2410c; }
+.dl-d.ok { background: #f0fdf4; color: #16a34a; }
+.dl-d.info { background: var(--blue-bg); color: var(--blue); }
+.dl-day { font-size: 22px; font-weight: 800; line-height: 1; }
+.dl-mon { font-size: 10px; font-weight: 600; margin-top: 1px; }
+.dl-body h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.dl-body p { font-size: 11.5px; color: var(--sub); line-height: 1.5; }
+.dl-bdg { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px; margin-top: 5px; }
+.dl-bdg.urgent { background: #fef2f2; color: #dc2626; }
+.dl-bdg.warning { background: #fff7ed; color: #c2410c; }
+.dl-bdg.ok { background: #f0fdf4; color: #16a34a; }
+.dl-bdg.info { background: var(--blue-bg); color: var(--blue); }
+.fm-item { padding: 11px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; }
+.fm-item:last-child { border-bottom: none; padding-bottom: 0; }
+.fm-num { background: #1e40af; color: #fff; border-radius: 6px; padding: 4px 8px; font-size: 10px; font-weight: 800; flex-shrink: 0; white-space: nowrap; }
+.fm-dt h4 { font-size: 12.5px; font-weight: 700; margin-bottom: 2px; }
+.fm-dt p { font-size: 11px; color: var(--sub); line-height: 1.4; }
+.notif-box { background: #f8fafc; border-radius: 10px; padding: 13px; margin: 10px 0; font-size: 12px; line-height: 1.65; color: #374151; border: 1px solid var(--border); white-space: pre-wrap; word-break: break-word; }
+.mrow { display: flex; gap: 8px; margin-bottom: 12px; }
+.mrow select { flex: 1; }
+.mrow button { padding: 10px 14px; background: var(--red); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit; flex-shrink: 0; -webkit-appearance: none; }
+
+/* ─── TOAST ─── */
+.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-8px); background: #1a1a2e; color: #fff; padding: 9px 20px; border-radius: 20px; font-size: 13px; z-index: 999; white-space: nowrap; opacity: 0; transition: opacity .22s, transform .22s; pointer-events: none; }
+.toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+.sp { height: 20px; }
+
+/* ─── PRINT OVERLAY ─── */
+#printOverlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:200;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#printOverlay.on{display:block}
+#printBar{background:#16a34a;padding:12px 16px;display:flex;gap:10px;align-items:center;position:sticky;top:0;z-index:10}
+#printBar button{padding:10px 20px;border:none;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-appearance:none}
+.pb-print{background:#fff;color:#16a34a}
+.pb-close{background:rgba(255,255,255,.2);color:#fff}
+#printContent{padding:15mm 20mm 15mm 25mm;font-family:"Times New Roman",serif;font-size:12pt;color:#000;max-width:210mm;margin:0 auto}
+#printContent .ph{display:flex;justify-content:space-between;margin-bottom:16pt}
+#printContent .pl p{font-size:11pt;line-height:1.9}
+#printContent .pr{text-align:right;font-size:10pt;line-height:1.7}
+#printContent .mau{color:#C8102E;font-weight:bold;font-size:11pt}
+#printContent .tit{text-align:center;font-size:14pt;font-weight:bold;text-transform:uppercase;margin:8pt 0 4pt}
+#printContent .sub{text-align:center;font-size:11pt;margin:2pt 0}
+#printContent .dvt{text-align:right;font-size:10pt;margin:8pt 0 2pt}
+#printContent table{width:100%;border-collapse:collapse;margin-top:6pt}
+#printContent th,#printContent td{border:1px solid black;padding:4pt 5pt;font-size:11pt}
+#printContent th{text-align:center;font-weight:bold}
+#printContent .cc{text-align:center}
+#printContent .cr{text-align:right}
+#printContent .tot{font-weight:bold}
+#printContent .foot{text-align:right;margin-top:18pt;font-size:11pt;line-height:2}
+@media print{#app,#fab,.toast{display:none!important}#printOverlay{display:block!important;position:static!important}#printBar{display:none!important}#printContent{padding:0!important}}
+.remind-strip{display:flex;gap:10px;margin-bottom:12px}
+.remind-box{flex:1;border-radius:12px;padding:13px 12px;display:flex;align-items:flex-start;gap:10px;box-shadow:var(--shadow)}
+.remind-box.r1{background:linear-gradient(135deg,#fff7ed,#ffedd5);border-left:4px solid #f59e0b}
+.remind-box.r2{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-left:4px solid #3b82f6}
+.r-icon{font-size:22px;flex-shrink:0}
+.r-title{font-size:12px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.r-desc{font-size:11px;color:var(--sub);line-height:1.5}
+
+/* ─── DAILY POPUP ─── */
+#dailyPopup { display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;padding:24px; }
+#dailyPopup.on { display:flex; }
+.dp-box { background:#fff;border-radius:20px;padding:28px 22px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:dpPop .3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes dpPop { from{transform:scale(.7);opacity:0} to{transform:scale(1);opacity:1} }
+.dp-emoji { font-size:56px;margin-bottom:12px;line-height:1; }
+.dp-title { font-size:13px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px; }
+.dp-msg { font-size:15px;font-weight:600;color:var(--dark);line-height:1.6;margin-bottom:6px; }
+.dp-sub { font-size:12px;color:var(--sub);margin-bottom:20px;line-height:1.5; }
+.dp-btn { background:var(--red);color:#fff;border:none;border-radius:12px;padding:13px 0;width:100%;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-appearance:none; }
+.dp-btn:active { transform:scale(.97); }
+</style>
 </head>
 <body>
 
 <div id="app">
-    <div id="hd">
-        <div class="hd-row">
-            <div style="flex:1; min-width:0">
-                <h1>📋 SỔ DOANH THU S1a-HKD</h1>
-                <div id="hdSub">Hộ kinh doanh / Cá nhân kinh doanh</div>
-            </div>
-            <div id="hdKK">—</div>
+  <div id="hd">
+    <div class="hd-row">
+      <div style="flex:1;min-width:0">
+        <h1>📑 SỔ DOANH THU S1a-HKD</h1>
+        <div id="hdSub">Hộ kinh doanh / Cá nhân kinh doanh</div>
+      </div>
+      <div id="hdKK" style="margin-left:8px">—</div>
+    </div>
+    <div class="hd-row">
+      <div class="hd-save">
+        <span class="save-dot" id="saveDot"></span>
+        <span id="saveStatus">Chưa có dữ liệu</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="scroll">
+    <div class="tab var on" id="tab-list">
+      <div class="ps" id="periodStrip"></div>
+      <div class="sum">
+        <div>
+          <div class="sum-lbl">Tổng doanh thu</div>
+          <div class="sum-num" id="sumTotal">0 ₫</div>
+          <div class="sum-cnt" id="sumCount">0 giao dịch</div>
         </div>
-        <div class="hd-save">
-            <span class="save-dot" id="saveDot"></span>
-            <span id="saveStatus">Chưa có dữ liệu</span>
-        </div>
+        <div style="font-size:38px;opacity:.45">💵</div>
+      </div>
+      <div class="sec">
+        <span class="sec-t">Giao dịch trong kỳ</span>
+        <span class="bdg" id="listBdg">0</span>
+      </div>
+      <div id="entryList"></div>
+      <div class="sp"></div>
     </div>
 
-    <div id="scroll">
-        <div class="tab on" id="tab-list">
-            <div class="ps" id="periodStrip"></div>
-            <div class="sum">
-                <div>
-                    <div class="sum-lbl">Tổng doanh thu kỳ này</div>
-                    <div class="sum-num" id="sumTotal">0 đ</div>
-                    <div class="sum-cnt" id="sumCount">0 giao dịch</div>
-                </div>
-                <div style="font-size:38px; opacity:.45">💰</div>
-            </div>
-            <div class="sec">
-                <span class="sec-t">Giao dịch trong kỳ</span>
-                <span class="bdg" id="listBdg">0</span>
-            </div>
-            <div id="entryList"></div>
-            <div class="sp"></div>
+    <div class="tab var" id="tab-tax">
+      <div class="nhom-card">
+        <div class="nhom-badge">NHÓM 1</div>
+        <div class="nhom-info">
+          <div class="nhom-dt">Doanh thu ≤ 1 tỷ/năm • Quy mô: Nhỏ</div>
+          <div class="nhom-grid">
+            <div class="nhom-item"><span class="nhom-label">Thuế</span><span class="nhom-val green">GTGT: Miễn<br>TNCN: Miễn</span></div>
+            <div class="nhom-item"><span class="nhom-label">Sổ sách</span><span class="nhom-val">S1a-HKD<br>Ghi chép đơn giản</span></div>
+            <div class="nhom-item"><span class="nhom-label">Hóa đơn</span><span class="nhom-val orange">Không bắt buộc</span></div>
+            <div class="nhom-item"><span class="nhom-label">Kê khai</span><span class="nhom-val blue" id="nhomKeKhai">1 lần/năm<br>Hạn: 31/1</span></div>
+          </div>
         </div>
-
-        <div class="tab" id="tab-tax">
-            <div class="nhom-card">
-                <div class="nhom-badge" id="lblNhomTitle">NHÓM 1</div>
-                <div class="nhom-info">
-                    <div class="nhom-dt" id="lblNhomDesc">Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ</div>
-                    <div class="nhom-grid">
-                        <div class="nhom-item"><span class="nhom-label">Thuế suất</span><span class="nhom-val green" id="taxValGtgt">GTGT: Miễn<br>TNCN: Miễn</span></div>
-                        <div class="nhom-item"><span class="nhom-label">Sổ sách</span><span class="nhom-val">S1a-HKD<br>Ghi chép đơn giản</span></div>
-                        <div class="nhom-item"><span class="nhom-label">Hóa đơn</span><span class="nhom-val">Không bắt buộc</span></div>
-                        <div class="nhom-item"><span class="nhom-label">Kê khai</span><span class="nhom-val" id="nhomKeKhai">1 lần/năm<br>Hạn: 31/1</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dl-card">
-                <div class="dl-d">
-                    <div class="dl-day" id="lblDaysLeft">--</div>
-                    <div class="dl-mon">NGÀY NỮA</div>
-                </div>
-                <div class="dl-body">
-                    <h4 id="lblLichTitle">Kê khai DT cả năm 2026</h4>
-                    <p id="lblLichSubtitle">Khai tổng doanh thu từ 01/01 đến 31/12 hằng năm. Hạn cuối quy định ngày 31/01 của năm tiếp theo.</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-t">📋 Mẫu kê khai gợi ý phòng thuế</div>
-                <div class="fm-item">
-                    <div class="fm-num">01/CNKD</div>
-                    <div class="fm-dt"><h4>Tờ khai thuế GTGT & TNCN</h4><p>Kê khai doanh thu kinh doanh tính thuế hằng năm.</p></div>
-                </div>
-                <div class="fm-item">
-                    <div class="fm-num">01-1/CNKD</div>
-                    <div class="fm-dt"><h4>Phụ lục bảng kê chi tiết doanh thu</h4><p>Đính kèm chi tiết mã hàng hóa dịch vụ phát sinh.</p></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-t">🔔 Khay nhớ tạm nhắc nộp thuế</div>
-                <div class="notif-box" id="notifBox"></div>
-                <button class="btn btn-b" onclick="copyNotification()">Sao chép văn bản nhắc thuế</button>
-            </div>
-            <div class="sp"></div>
+      </div>
+      <div class="tax-hd">
+        <h2>📅 Lịch nộp tờ khai Nhóm 1</h2>
+        <p id="taxMethodLbl">HKD đã hoạt động — kê khai 1 lần/năm, hạn 31/1</p>
+      </div>
+      <div id="taxDeadlines"></div>
+      <div class="remind-strip" id="remindStrip">
+        <div class="remind-box r1" id="remind31_7" style="display:none">
+          <div class="r-icon">📅</div>
+          <div class="r-body">
+            <div class="r-title">Hạn 31/7 hàng năm</div>
+            <div class="r-desc">Kê khai DT 6 tháng đầu năm<br>(01/01 – 30/06)</div>
+          </div>
         </div>
-
-        <div class="tab" id="tab-exp">
-            <div class="card" style="text-align:center">
-                <div style="font-size:42px; margin-bottom:8px">🖨️</div>
-                <div style="font-size:15px; font-weight:800; margin-bottom:5px">In mẫu doanh thu S1a-HKD</div>
-                <p style="font-size:12px; color:var(--sub); margin-bottom:14px; line-height:1.5">Kết xuất phôi trang in báo cáo gửi Cơ quan Thuế</p>
-                <div class="fg">
-                    <label class="fl">Chọn kỳ xuất phôi</label>
-                    <select class="fi" id="selPrint"></select>
-                </div>
-                <button class="btn btn-r" onclick="doPrint()">Xem & Tạo Bản In</button>
-            </div>
-            <div class="sp"></div>
+        <div class="remind-box r2" id="remind31_1">
+          <div class="r-icon">📅</div>
+          <div class="r-body">
+            <div class="r-title">Hạn 31/1 năm sau</div>
+            <div class="r-desc">Kê khai DT cả năm<br>(01/01 – 31/12)</div>
+          </div>
         </div>
-
-        <div class="tab" id="tab-cfg">
-            <div class="card">
-                <div class="card-t">🏢 Cấu hình thực thể kinh doanh</div>
-                <div class="fg"><label class="fl">Tên hộ / Cá nhân KD</label><input class="fi" id="cfgName" type="text" placeholder="Nhập tên hộ..."></div>
-                <div class="fg"><label class="fl">Địa chỉ hoạt động</label><input class="fi" id="cfgAddr" type="text" placeholder="Nhập địa chỉ..."></div>
-                <div class="fg"><label class="fl">Mã số thuế</label><input class="fi" id="cfgTax" type="text" inputmode="numeric" placeholder="MST..."></div>
-                <div class="fg"><label class="fl">Địa điểm kinh doanh</label><input class="fi" id="cfgLoc" type="text" placeholder="Trụ sở shop/kho..."></div>
-                <div class="fg">
-                    <label class="fl">Phương pháp kê khai hành chính</label>
-                    <select class="fi" id="cfgMethod" onchange="saveCfg()">
-                        <option value="old">HKD đã hoạt động từ năm trước (Kê khai 1 lần: 31/1)</option>
-                        <option value="new">HKD mới thành lập trong năm (Kê khai 2 lần: 31/7 & 31/1)</option>
-                    </select>
-                </div>
-                <button class="btn btn-r" onclick="saveCfg()">Cập nhật thông tin</button>
-            </div>
-
-            <div class="card">
-                <div class="card-t">🛡️ Cơ sở sao lưu & Khôi phục dữ liệu</div>
-                <input type="file" id="import-file" style="display:none" onchange="importJSON(this)">
-                <div class="import-zone" onclick="document.getElementById('import-file').click()">
-                    📂 <strong>Đọc tệp tin sao lưu cấu trúc JSON</strong>
-                    <span style="font-size:11px; margin-top:4px; display:block">Nhấp để chọn file khôi phục (.json)</span>
-                </div>
-                <button class="btn btn-g" onclick="exportJSON()">Xuất tệp sao lưu cục bộ (JSON)</button>
-                <button class="btn btn-danger" onclick="clearAll()">Xóa sạch dữ liệu cục bộ</button>
-            </div>
-            <div class="sp"></div>
+      </div>
+      <div class="card">
+        <div class="card-t">📋 Mẫu kê khai gợi ý</div>
+        <div class="fm-item">
+          <div class="fm-num">01/CNKD</div>
+          <div class="fm-dt"><h4>Tờ khai thuế GTGT &amp; TNCN</h4><p>Kê khai doanh thu, thuế GTGT và TNCN hàng tháng hoặc quý theo NĐ 68/2025 và TT 18/TT-BTC.</p></div>
         </div>
+        <div class="fm-item">
+          <div class="fm-num">01-1/CNKD</div>
+          <div class="fm-dt"><h4>Phụ lục bảng kê doanh thu</h4><p>Chi tiết doanh thu theo từng loại hàng hóa/dịch vụ. Đính kèm khi có nhiều nhóm doanh thu.</p></div>
+        </div>
+        <div class="fm-item">
+          <div class="fm-num">S1a-HKD</div>
+          <div class="fm-dt"><h4>Sổ doanh thu hằng ngày</h4><p>Ghi chép hằng ngày (ứng dụng này). Là cơ sở lập tờ khai 01/CNKD cuối kỳ.</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-t">🔔 Tạo thông báo nhắc thuế</div>
+        <p style="font-size:12px;color:var(--sub);margin-bottom:12px;line-height:1.55">Tạo nội dung nhắc nộp thuế để gửi qua Zalo / tin nhắn</p>
+        <div class="notif-box" id="notifBox" style="display:none"></div>
+        <button class="btn btn-b" onclick="genNoti()">🔔 Tạo thông báo</button>
+        <button class="btn btn-g" id="copyBtn" style="display:none" onclick="copyNoti()">📋 Sao chép thông báo</button>
+      </div>
+      <div class="sp"></div>
     </div>
 
-    <nav id="bnav">
-        <button class="ni on" onclick="switchTab(event, 'tab-list')"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Danh sách</button>
-        <button class="ni" onclick="switchTab(event, 'tab-tax')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Lịch thuế</button>
-        <button class="ni" onclick="switchTab(event, 'tab-exp')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Xuất file</button>
-        <button class="ni" onclick="switchTab(event, 'tab-cfg')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Cài đặt</nav>
-</div>
+    <div class="tab var" id="tab-exp">
+      <div class="card" style="text-align:center">
+        <div style="font-size:42px;margin-bottom:8px">🖨️</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:5px">In mẫu S1a-HKD</div>
+        <p style="font-size:12px;color:var(--sub);margin-bottom:14px;line-height:1.5">Tạo trang in chuẩn A4 ngay trong trình duyệt</p>
+        <div class="fg"><label class="fl">Chọn tháng</label><select class="fi" id="selPrint"></select></div>
+        <button class="btn btn-r" onclick="doPrint()">🖨️ Xem &amp; In</button>
+      </div>
+      <div class="card">
+        <div class="card-t">💡 Hướng dẫn in trên điện thoại</div>
+        <p style="font-size:12.5px;color:var(--sub);line-height:1.8">
+          1. Nhấn <strong style="color:var(--red)">Xem &amp; In</strong><br>
+          2. Nhấn nút <strong>🖨️ In ngay</strong><br>
+          3. Chọn máy in hoặc <strong>Lưu PDF</strong><br>
+          4. Nhấn <strong>✓ Đóng</strong> để quay lại
+        </p>
+      </div>
+      <div class="sp"></div>
+    </div>
 
-<button id="fab" onclick="openAdd()">+</button>
-
-<div id="modal" onclick="if(event.target===this) closeModal()">
-    <div class="sheet">
-        <div class="handle"></div>
-        <div class="mtitle" id="mTitle">✨ Ghi nhận doanh thu mới</div>
-        <div class="fg"><label class="fl">Ngày thực hiện phát sinh</label><input class="fi" id="eDate" type="date"></div>
-        <div class="fg"><label class="fl">Nội dung diễn giải sản phẩm</label><input class="fi" id="eDesc" type="text" placeholder="Bán lẻ sản phẩm dịch vụ lẻ..."></div>
+    <div class="tab var" id="tab-cfg">
+      <div class="card">
+        <div class="card-t">📍 Thông tin hộ kinh doanh</div>
+        <div class="fg"><label class="fl">Tên hộ / cá nhân kinh doanh</label><input class="fi" id="cfgName" type="text" placeholder="Nhập tên..."></div>
+        <div class="fg"><label class="fl">Địa chỉ</label><input class="fi" id="cfgAddr" type="text" placeholder="Nhập địa chỉ..."></div>
+        <div class="fg"><label class="fl">Mã số thuế</label><input class="fi" id="cfgTax" type="text" inputmode="numeric" placeholder="0123456789"></div>
+        <div class="fg"><label class="fl">Địa điểm kinh doanh</label><input class="fi" id="cfgLoc" type="text" placeholder="Địa điểm KD..."></div>
         <div class="fg">
-            <label class="fl">Số tiền thu về (VNĐ)</label>
-            <input class="fi" id="eAmt" type="number" placeholder="0" inputmode="numeric" oninput="document.getElementById('amtPrev').innerText = (parseFloat(this.value)||0).toLocaleString('vi-VN') + ' đ'">
-            <div class="amt-preview" id="amtPrev">0 đ</div>
+          <label class="fl">Phương pháp kê khai</label>
+          <select class="fi" id="cfgMethod">
+            <option value="new">HKD mới thành lập trong năm (kê khai 2 lần: 31/7 và 31/1)</option>
+            <option value="old">HKD đã hoạt động từ năm trước (kê khai 1 lần: 31/1)</option>
+          </select>
         </div>
-        <button class="btn btn-r" onclick="saveEntry()">Lưu Giao Dịch Vào Sổ</button>
-        <button class="btn btn-g" onclick="closeModal()">Hủy Bỏ</button>
+        <button class="btn btn-r" onclick="saveCfg()">💾 Lưu thông tin</button>
+      </div>
+      <div class="card">
+        <div class="card-t">⚙️ Dữ liệu</div>
+        <div class="import-zone" onclick="importFile()">
+          📁 <strong>Nhập dữ liệu từ file JSON</strong><br>
+          <span style="font-size:11px;margin-top:4px;display:block">Chạm để chọn file sao lưu (.json)</span>
+        </div>
+        <button class="btn btn-g" onclick="exportJSON()">📤 Xuất file sao lưu (JSON)</button>
+        <button class="btn btn-danger" onclick="clearAll()">🗑️ Xóa toàn bộ dữ liệu</button>
+        <p style="font-size:11px;color:var(--sub);margin-top:10px;line-height:1.6;text-align:center">💡 Dữ liệu tự lưu vào trình duyệt.<br>Xuất JSON định kỳ để sao lưu an toàn.</p>
+      </div>
+      <div class="sp"></div>
     </div>
+  </div>
+
+  <div id="bnav">
+    <button class="ni on" onclick="switchTab('list', this)">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-linecap="round"/></svg>Danh sách
+    </button>
+    <button class="ni" onclick="switchTab('tax', this)">
+      <svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Lịch Thuế
+    </button>
+    <button class="ni" onclick="switchTab('exp', this)">
+      <svg viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Xuất File
+    </button>
+    <button class="ni" onclick="switchTab('cfg', this)">
+      <svg viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor"/></svg>Cài đặt
+    </button>
+  </div>
+
+  <button id="fab" onclick="openAddModal()">+</button>
 </div>
+
+<div id="modal">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="mtitle" id="modalTitle">Thêm giao dịch mới</div>
+    <input type="hidden" id="editIndex" value="">
+    <div class="fg"><label class="fl">Ngày giao dịch</label><input class="fi" type="date" id="fDate"></div>
+    <div class="fg"><label class="fl">Nội dung / Tên hàng hóa dịch vụ</label><input class="fi" type="text" id="fDesc" placeholder="Ví dụ: Bán quần áo, doanh thu ăn uống..."></div>
+    <div class="fg"><label class="fl">Số tiền doanh thu (đơn vị: đồng)</label><input class="fi" type="number" inputmode="numeric" id="fAmt" placeholder="0" oninput="previewAmt(this.value)"> <div class="amt-preview" id="fAmtPreview">0 ₫</div></div>
+    <div class="fg">
+      <label class="fl">Nhóm ngành tính thuế</label>
+      <select class="fi" id="fCat">
+        <option value="1">1. Phân phối, cung cấp hàng hóa (GTGT 1%; TNCN 0.5%)</option>
+        <option value="2">2. Dịch vụ, xây dựng không bao thầu NVL (GTGT 5%; TNCN 2%)</option>
+        <option value="3">3. Sản xuất, vận tải, dịch vụ có gắn với hàng hóa (GTGT 3%; TNCN 1.5%)</option>
+        <option value="4">4. Hoạt động kinh doanh khác (GTGT 2%; TNCN 1%)</option>
+      </select>
+    </div>
+    <button class="btn btn-r" id="modalSubmitBtn" onclick="submitForm()">➕ Thêm giao dịch</button>
+    <button class="btn btn-g" onclick="closeModal()">Đóng</button>
+  </div>
+</div>
+
+<div id="dailyPopup">
+  <div class="dp-box">
+    <div class="dp-emoji">📈</div>
+    <div class="dp-title" id="dpTitle">Mẹo Doanh Thu</div>
+    <div class="dp-msg" id="dpMsg">Luôn ghi chép đầy đủ các giao dịch phát sinh hằng ngày để đối chiếu thuế chính xác nhất cuối năm!</div>
+    <div class="dp-sub">Sổ sách rõ ràng giúp bạn tối ưu chi phí thuế hợp pháp.</div>
+    <button class="dp-btn" onclick="closeDp()">Tuyệt vời</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Thông báo</div>
 
 <div id="printOverlay">
-    <div id="printBar">
-        <button class="pb-print" onclick="window.print()">🖨️ Tiến hành lệnh in</button>
-        <button class="pb-close" onclick="closePrint()">❌ Thoát phôi xem</button>
-    </div>
-    <div id="printContent"></div>
+  <div id="printBar">
+    <button class="pb-print" onclick="window.print()">🖨️ In ngay</button>
+    <button class="pb-close" onclick="closePrint()">✕ Đóng</button>
+  </div>
+  <div id="printContent"></div>
 </div>
 
 <script>
-    const S = {
-        cfg: { name: '', addr: '', tax: '', loc: '', method: 'old' },
-        entries: [],
-        period: null,
-        editId: null
+// ─── DATA MANAGEMENT ───
+let db = { config: { name: "", addr: "", tax: "", loc: "", method: "old" }, entries: [] };
+let currentPeriod = "all";
+
+const catsInfo = {
+  "1": { name: "Phân phối, cung cấp hàng hóa", vat: "1%", pit: "0.5%" },
+  "2": { name: "Dịch vụ, xây dựng không bao thầu NVL", vat: "5%", pit: "2%" },
+  "3": { name: "Sản xuất, vận tải, dịch vụ có gắn với hàng hóa", vat: "3%", pit: "1.5%" },
+  "4": { name: "Hoạt động kinh doanh khác", vat: "2%", pit: "1%" }
+};
+
+window.onload = function() {
+  loadData();
+  initApp();
+  checkDailyPopup();
+};
+
+function loadData() {
+  let local = localStorage.getItem("s1a_hkd_db");
+  if(local) {
+    try { db = JSON.parse(local); if(!db.entries) db.entries = []; if(!db.config) db.config = {}; } catch(e) { showToast("Lỗi tải dữ liệu!"); }
+  }
+  updateHDStatus();
+}
+
+function saveData() {
+  const dot = document.getElementById("saveDot");
+  dot.classList.add("saving");
+  document.getElementById("saveStatus").innerText = "Đang lưu...";
+  
+  localStorage.setItem("s1a_hkd_db", JSON.stringify(db));
+  
+  setTimeout(() => {
+    dot.classList.remove("saving");
+    updateHDStatus();
+  }, 400);
+}
+
+function updateHDStatus() {
+  const kk = document.getElementById("hdKK");
+  if(db.config.name) {
+    document.getElementById("hdSub").innerText = db.config.name;
+    kk.innerText = db.config.tax || "Đã thiết lập";
+  } else {
+    document.getElementById("hdSub").innerText = "Hộ kinh doanh / Cá nhân kinh doanh";
+    kk.innerText = "Chưa thiết lập";
+  }
+  
+  if(db.entries.length > 0) {
+    document.getElementById("saveStatus").innerText = `Đã lưu ${db.entries.length} giao dịch`;
+  } else {
+    document.getElementById("saveStatus").innerText = "Chưa có dữ liệu";
+  }
+}
+
+function initApp() {
+  // Điền dữ liệu cài đặt
+  document.getElementById("cfgName").value = db.config.name || "";
+  document.getElementById("cfgAddr").value = db.config.addr || "";
+  document.getElementById("cfgTax").value = db.config.tax || "";
+  document.getElementById("cfgLoc").value = db.config.loc || "";
+  document.getElementById("cfgMethod").value = db.config.method || "old";
+  
+  updateTaxTabUI();
+  buildPeriodStrip();
+  renderList();
+  buildPrintSelect();
+}
+
+function updateTaxTabUI() {
+  const m = db.config.method || "old";
+  if(m === "new") {
+    document.getElementById("nhomKeKhai").innerHTML = "2 lần/năm<br>Hạn: 31/7 &amp; 31/1";
+    document.getElementById("taxMethodLbl").innerText = "HKD mới thành lập trong năm — kê khai 2 lần";
+    document.getElementById("remind31_7").style.display = "flex";
+  } else {
+    document.getElementById("nhomKeKhai").innerHTML = "1 lần/năm<br>Hạn: 31/1";
+    document.getElementById("taxMethodLbl").innerText = "HKD đã hoạt động — kê khai 1 lần/năm, hạn 31/1";
+    document.getElementById("remind31_7").style.display = "none";
+  }
+}
+
+// ─── TABS ───
+function switchTab(tabId, btn) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("on"));
+  document.getElementById("tab-" + tabId).classList.add("on");
+  
+  document.querySelectorAll(".ni").forEach(n => n.classList.remove("on"));
+  btn.classList.add("on");
+  
+  const fab = document.getElementById("fab");
+  if(tabId === "list") fab.classList.remove("hide");
+  else fab.classList.add("hide");
+  
+  if(tabId === "list") renderList();
+}
+
+// ─── PERIOD STRIP ───
+function buildPeriodStrip() {
+  const strip = document.getElementById("periodStrip");
+  let months = [];
+  
+  db.entries.forEach(e => {
+    let m = e.date.substring(0, 7); // YYYY-MM
+    if(!months.includes(m)) months.push(m);
+  });
+  
+  months.sort((a,b) => b.localeCompare(a)); // Mới nhất lên đầu
+  
+  let html = `<button class="pc ${currentPeriod==='all'?'on':''}" onclick="setPeriod('all')">Tất cả</button>`;
+  months.forEach(m => {
+    let parts = m.split("-");
+    let lbl = `Tháng ${parts[1]}/${parts[0]}`;
+    html += `<button class="pc ${currentPeriod===m?'on':''}" onclick="setPeriod('${m}')">${lbl}</button>`;
+  });
+  
+  strip.innerHTML = html;
+}
+
+function setPeriod(p) {
+  currentPeriod = p;
+  document.querySelectorAll(".pc").forEach(b => b.classList.remove("on"));
+  buildPeriodStrip();
+  renderList();
+}
+
+// ─── RENDER LIST ───
+function renderList() {
+  const container = document.getElementById("entryList");
+  let filtered = [];
+  
+  if(currentPeriod === "all") {
+    filtered = [...db.entries];
+  } else {
+    filtered = db.entries.filter(e => e.date.startsWith(currentPeriod));
+  }
+  
+  // Sắp xếp ngày giảm dần
+  filtered.sort((a,b) => b.date.localeCompare(a.date));
+  
+  // Tính tổng
+  let total = 0;
+  filtered.forEach(e => total += Number(e.amt));
+  
+  document.getElementById("sumTotal").innerText = fmtAmt(total);
+  document.getElementById("sumCount").innerText = `${filtered.length} giao dịch`;
+  document.getElementById("listBdg").innerText = filtered.length;
+  
+  if(filtered.length === 0) {
+    container.innerHTML = `<div class="mt"><div class="mt-i">📭</div><div>Kỳ này chưa có giao dịch nào.<br>Bấm nút (+) ở góc phải để thêm!</div></div>`;
+    return;
+  }
+  
+  let html = "";
+  filtered.forEach((e, idx) => {
+    let dParts = e.date.split("-");
+    let day = dParts[2] || "01";
+    let mon = dParts[1] ? `T${dParts[1]}` : "";
+    
+    // Tìm index thực tế của item trong mảng db.entries để thực hiện xóa/sửa
+    let realIdx = db.entries.findIndex(r => r.id === e.id);
+    if (realIdx === -1) realIdx = idx; // Dự phòng
+    
+    html += `
+    <div class="ec">
+      <div class="db">${day}<div class="dm">${mon}</div></div>
+      <div class="ei">
+        <div class="edesc">${e.desc}</div>
+        <div class="eamt">+${fmtAmt(e.amt)}</div>
+      </div>
+      <div class="ea">
+        <button class="ib" onclick="openEditModal(${realIdx})" title="Sửa">✏️</button>
+        <button class="ib" onclick="deleteEntry(${realIdx})" title="Xóa">🗑️</button>
+      </div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+// ─── FORM MODAL (ADD & EDIT) ───
+function openAddModal() {
+  document.getElementById("modalTitle").innerText = "Thêm giao dịch mới";
+  document.getElementById("modalSubmitBtn").innerText = "➕ Thêm giao dịch";
+  document.getElementById("editIndex").value = ""; // Rỗng nghĩa là thêm mới
+  
+  // Set ngày mặc định là ngày hiện tại
+  let today = new Date().toISOString().substring(0, 10);
+  document.getElementById("fDate").value = today;
+  document.getElementById("fDesc").value = "";
+  document.getElementById("fAmt").value = "";
+  document.getElementById("fAmtPreview").innerText = "0 ₫";
+  document.getElementById("fCat").value = "1";
+  
+  document.getElementById("modal").classList.add("on");
+}
+
+function openEditModal(idx) {
+  let item = db.entries[idx];
+  if(!item) return;
+  
+  document.getElementById("modalTitle").innerText = "Chỉnh sửa giao dịch";
+  document.getElementById("modalSubmitBtn").innerText = "🔄 Cập nhật";
+  document.getElementById("editIndex").value = idx; // Lưu vị trí cần sửa
+  
+  document.getElementById("fDate").value = item.date;
+  document.getElementById("fDesc").value = item.desc;
+  document.getElementById("fAmt").value = item.amt;
+  previewAmt(item.amt);
+  document.getElementById("fCat").value = item.cat || "1";
+  
+  document.getElementById("modal").classList.add("on");
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("on");
+}
+
+function previewAmt(val) {
+  document.getElementById("fAmtPreview").innerText = fmtAmt(val || 0);
+}
+
+function submitForm() {
+  const date = document.getElementById("fDate").value;
+  const desc = document.getElementById("fDesc").value.trim();
+  const amt = document.getElementById("fAmt").value;
+  const cat = document.getElementById("fCat").value;
+  const editIdx = document.getElementById("editIndex").value;
+  
+  if(!date || !desc || !amt) {
+    showToast("Vui lòng nhập đủ thông tin!");
+    return;
+  }
+  
+  if(editIdx === "") {
+    // Chức năng THÊM MỚI
+    let newEntry = {
+      id: "e_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
+      date: date,
+      desc: desc,
+      amt: Number(amt),
+      cat: cat
     };
-
-    const LS_KEY = 's1a_hkd_v1_pro';
-
-    function load() {
-        try {
-            const raw = localStorage.getItem(LS_KEY);
-            if (!raw) return;
-            const d = JSON.parse(raw);
-            if (d.cfg) S.cfg = { ...S.cfg, ...d.cfg };
-            if (d.entries) S.entries = d.entries;
-            if (d.savedAt) showSaveStatus(d.savedAt);
-        } catch (e) { console.error(e); }
+    db.entries.push(newEntry);
+    showToast("Đã thêm giao dịch!");
+  } else {
+    // Chức năng CẬP NHẬT / EDIT
+    let idx = Number(editIdx);
+    if(db.entries[idx]) {
+      db.entries[idx].date = date;
+      db.entries[idx].desc = desc;
+      db.entries[idx].amt = Number(amt);
+      db.entries[idx].cat = cat;
+      showToast("Đã cập nhật giao dịch!");
     }
+  }
+  
+  saveData();
+  closeModal();
+  buildPeriodStrip();
+  renderList();
+  buildPrintSelect();
+}
 
-    function persist() {
-        try {
-            document.getElementById('saveDot').classList.add('saving');
-            const data = { cfg: S.cfg, entries: S.entries, savedAt: new Date().toISOString() };
-            localStorage.setItem(LS_KEY, JSON.stringify(data));
-            setTimeout(() => {
-                document.getElementById('saveDot').classList.remove('saving');
-                showSaveStatus(data.savedAt);
-            }, 250);
-        } catch (e) { console.error(e); }
-    }
+function deleteEntry(idx) {
+  if(confirm("Bạn có chắc chắn muốn xóa giao dịch này?")) {
+    db.entries.splice(idx, 1);
+    showToast("Đã xóa giao dịch!");
+    saveData();
+    buildPeriodStrip();
+    renderList();
+    buildPrintSelect();
+  }
+}
 
-    function showSaveStatus(iso) {
-        const el = document.getElementById('saveStatus');
-        if (!el) return;
-        const d = new Date(iso);
-        el.textContent = ` Đã tự động sao lưu vào lúc: ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-    }
+// ─── CÀI ĐẶT ───
+function saveCfg() {
+  db.config.name = document.getElementById("cfgName").value.trim();
+  db.config.addr = document.getElementById("cfgAddr").value.trim();
+  db.config.tax = document.getElementById("cfgTax").value.trim();
+  db.config.loc = document.getElementById("cfgLoc").value.trim();
+  db.config.method = document.getElementById("cfgMethod").value;
+  
+  saveData();
+  updateTaxTabUI();
+  showToast("Đã lưu thông tin cài đặt!");
+}
 
-    function fillCfgForm() {
-        document.getElementById('cfgName').value = S.cfg.name;
-        document.getElementById('cfgAddr').value = S.cfg.addr;
-        document.getElementById('cfgTax').value = S.cfg.tax;
-        document.getElementById('cfgLoc').value = S.cfg.loc;
-        document.getElementById('cfgMethod').value = S.cfg.method;
-    }
+function clearAll() {
+  if(confirm("CẢNH BÁO: Hành động này sẽ xóa toàn bộ giao dịch và cài đặt hiện tại! Bạn chắc chắn chứ?")) {
+    db.entries = [];
+    db.config = { name: "", addr: "", tax: "", loc: "", method: "old" };
+    saveData();
+    initApp();
+    showToast("Đã xóa hết dữ liệu!");
+  }
+}
 
-    function saveCfg() {
-        S.cfg.name = document.getElementById('cfgName').value;
-        S.cfg.addr = document.getElementById('cfgAddr').value;
-        S.cfg.tax = document.getElementById('cfgTax').value;
-        S.cfg.loc = document.getElementById('cfgLoc').value;
-        S.cfg.method = document.getElementById('cfgMethod').value;
-        persist();
-        renderAll();
-        alert('✨ Đã cập nhật cấu hình thực thể hộ thành công!');
-    }
+// ─── XUẤT SAO LƯU / NHẬP JSON ───
+function exportJSON() {
+  let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+  let dlAnchorNode = document.createElement('a');
+  dlAnchorNode.setAttribute("href", dataStr);
+  let time = new Date().toISOString().substring(0,10);
+  dlAnchorNode.setAttribute("download", `so_doanh_thu_s1a_${time}.json`);
+  document.body.appendChild(dlAnchorNode);
+  dlAnchorNode.click();
+  dlAnchorNode.remove();
+}
 
-    function switchTab(e, tabId) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-        document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
-        document.getElementById(tabId).classList.add('on');
-        e.currentTarget.classList.add('on');
-        document.getElementById('fab').style.display = (tabId === 'tab-list') ? 'flex' : 'none';
-    }
-
-    function openAdd() {
-        S.editId = null;
-        document.getElementById('mTitle').innerText = "✨ Ghi nhận doanh thu mới";
-        document.getElementById('eDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('eDesc').value = '';
-        document.getElementById('eAmt').value = '';
-        document.getElementById('amtPrev').innerText = '0 đ';
-        document.getElementById('modal').classList.add('on');
-    }
-
-    function closeModal() { document.getElementById('modal').classList.remove('on'); }
-
-    function saveEntry() {
-        const dt = document.getElementById('eDate').value;
-        const desc = document.getElementById('eDesc').value.trim();
-        const amt = parseFloat(document.getElementById('eAmt').value);
-
-        if (!dt || !desc || isNaN(amt) || amt <= 0) { alert('Vui lòng điền đủ dữ liệu phát sinh hợp lệ!'); return; }
-
-        S.entries.push({ id: Date.now(), date: dt, desc, amount: amt });
-        persist();
-        closeModal();
-        renderAll();
-    }
-
-    function deleteEntry(id) {
-        if (!confirm('Bạn thực sự muốn xóa dòng doanh thu này ra khỏi hệ thống sổ?')) return;
-        S.entries = S.entries.filter(e => e.id !== id);
-        persist();
-        renderAll();
-    }
-
-    function getActivePeriodEntries() {
-        if (!S.period) return S.entries;
-        return S.entries.filter(e => {
-            const parts = e.date.split('-');
-            return `${parts[1]}/${parts[0]}` === S.period;
-        });
-    }
-
-    function renderAll() {
-        const strip = document.getElementById('periodStrip');
-        const map = {};
-        let totalRevenueAllTime = 0;
-
-        S.entries.forEach(e => {
-            totalRevenueAllTime += e.amount;
-            const parts = e.date.split('-');
-            const key = `${parts[1]}/${parts[0]}`;
-            map[key] = true;
-        });
-        
-        const periods = Object.keys(map).sort().reverse();
-        if (periods.length > 0 && !S.period) S.period = periods[0];
-
-        let stripHtml = `<div class="pc ${!S.period?'on':''}" onclick="setPeriod(null)">Tất cả</div>`;
-        periods.forEach(p => {
-            stripHtml += `<div class="pc ${S.period===p?'on':''}" onclick="setPeriod('${p}')">${p}</div>`;
-        });
-        strip.innerHTML = stripHtml;
-
-        const filtered = getActivePeriodEntries();
-        const container = document.getElementById('entryList');
-        let total = 0;
-
-        if (filtered.length === 0) {
-            container.innerHTML = `<div class="mt"><div class="mt-i">📂</div>Trống vắng kỳ sổ sách này</div>`;
+function importFile() {
+  let input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file,'UTF-8');
+    reader.onload = readerEvent => {
+      let content = readerEvent.target.result;
+      try {
+        let imported = JSON.parse(content);
+        if(imported.entries && Array.isArray(imported.entries)) {
+          db = imported;
+          saveData();
+          initApp();
+          showToast("Nhập dữ liệu thành công!");
         } else {
-            let listHtml = '';
-            filtered.sort((a,b)=>b.date.localeCompare(a.date)).forEach(e => {
-                total += e.amount;
-                const dParts = e.date.split('-');
-                listHtml += `
-                    <div class="ec">
-                        <div class="db">${dParts[2]}<div class="dm">T${dParts[1]}</div></div>
-                        <div class="ei">
-                            <div class="edesc">${e.desc}</div>
-                            <div class="eamt">${e.amount.toLocaleString('vi-VN')} đ</div>
-                        </div>
-                        <button class="btn-del" onclick="deleteEntry(${e.id})">❌</button>
-                    </div>`;
-            });
-            container.innerHTML = listHtml;
+          showToast("File không đúng cấu trúc!");
         }
-
-        document.getElementById('sumTotal').innerText = total.toLocaleString('vi-VN') + ' đ';
-        document.getElementById('sumCount').innerText = `${filtered.length} giao dịch`;
-        document.getElementById('listBdg').innerText = filtered.length;
-        document.getElementById('hdKK').innerText = S.cfg.name ? S.cfg.name.substring(0,10) : 'Hộ Kinh Doanh';
-
-        // LOGIC TÍNH TOÁN THUẾ SUẤT ĐỘNG THEO DOANH THU THẬT
-        let taxGtgtText = "GTGT: Miễn<br>TNCN: Miễn";
-        if(totalRevenueAllTime > 1000000000) {
-            document.getElementById('lblNhomTitle').innerText = "NHÓM 2 NÂNG CAO";
-            document.getElementById('lblNhomDesc').innerText = "Doanh thu > 1 tỷ/năm · Quy mô: Lớn";
-            taxGtgtText = `GTGT: 1% (~ ${(totalRevenueAllTime*0.01).toLocaleString('vi-VN')}đ)<br>TNCN: 0.5% (~ ${(totalRevenueAllTime*0.005).toLocaleString('vi-VN')}đ)`;
-        } else {
-            document.getElementById('lblNhomTitle').innerText = "NHÓM 1";
-            document.getElementById('lblNhomDesc').innerText = "Doanh thu ≤ 1 tỷ/năm · Quy mô: Nhỏ";
-        }
-        document.getElementById('taxValGtgt').innerHTML = taxGtgtText;
-
-        // BỘ ĐẾM LỊCH NỘP THUẾ THỜI GIAN THỰC
-        const nay = new Date();
-        let hạnNộp = new Date(nay.getFullYear() + 1, 0, 31);
-        if(S.cfg.method === 'new' && nay.getMonth() < 7) {
-            hạnNộp = new Date(nay.getFullYear(), 6, 31);
-            document.getElementById('lblLichTitle').innerText = "Kê khai thuế đợt 1 (HKD mới)";
-        } else {
-            document.getElementById('lblLichTitle').innerText = `Kê khai doanh thu cả năm ${nay.getFullYear()}`;
-        }
-        
-        const conLai = Math.ceil((hạnNộp - nay)/(1000*60*60*24));
-        document.getElementById('lblDaysLeft').innerText = conLai > 0 ? conLai : 0;
-        
-        const textNotice = `A🔔 NHẮC KÊ KHAI DOANH THU ĐỊNH KỲ
-===================================
-🏢 Cơ sở: ${S.cfg.name || 'Chưa cập nhật'}
-🆔 Mã số thuế: ${S.cfg.tax || 'Chưa cập nhật'}
-📅 Trạng thái: Hạn nộp báo cáo còn lại ${conLai > 0 ? conLai : 0} ngày.
-===================================
-✔️ Hướng dẫn quyết toán hành chính:
-1. Chốt dữ liệu in phôi mẫu S1a-HKD từ hệ thống.
-2. Điền thông tin thu nhập lên tờ khai mẫu số 01/CNKD.
-3. Gửi tờ khai điện tử thông qua App eTax Mobile của Tổng cục Thuế.`;
-        document.getElementById('notifBox').innerText = textNotice;
-
-        const sel = document.getElementById('selPrint');
-        let selHtml = '<option value="all">Tất cả kỳ phát sinh</option>';
-        periods.forEach(p => { selHtml += `<option value="${p}">Tháng ${p}</option>`; });
-        sel.innerHTML = selHtml;
+      } catch(ex) {
+        showToast("Lỗi đọc file JSON!");
+      }
     }
+  }
+  input.click();
+}
 
-    function setPeriod(p) { S.period = p; renderAll(); }
+// ─── IN 📜 ───
+function buildPrintSelect() {
+  const sel = document.getElementById("selPrint");
+  let months = [];
+  db.entries.forEach(e => {
+    let m = e.date.substring(0,7);
+    if(!months.includes(m)) months.push(m);
+  });
+  months.sort((a,b) => b.localeCompare(a));
+  
+  if(months.length === 0) {
+    sel.innerHTML = `<option value="">-- Chưa có dữ liệu --</option>`;
+    return;
+  }
+  
+  let html = "";
+  months.forEach(m => {
+    let p = m.split("-");
+    html += `<option value="${m}">Tháng ${p[1]}/${p[0]}</option>`;
+  });
+  sel.innerHTML = html;
+}
 
-    function copyNotification() {
-        navigator.clipboard.writeText(document.getElementById('notifBox').innerText);
-        alert('✨ Đã sao chép văn bản nhắc thuế vào khay nhớ tạm thành công!');
+function doPrint() {
+  const m = document.getElementById("selPrint").value;
+  if(!m) { showToast("Chưa có tháng để in!"); return; }
+  
+  let filtered = db.entries.filter(e => e.date.startsWith(m));
+  filtered.sort((a,b) => a.date.localeCompare(b.date)); // In xếp xuôi từ đầu tháng
+  
+  let p = m.split("-");
+  let thg = p[1], nam = p[2] || p[0];
+  
+  let total = 0;
+  let rowsHtml = "";
+  
+  filtered.forEach((e, idx) => {
+    total += Number(e.amt);
+    let dParts = e.date.split("-");
+    let fDateStr = `${dParts[2]}/${dParts[1]}/${dParts[0]}`;
+    let c = catsInfo[e.cat || "1"];
+    
+    rowsHtml += `
+    <tr>
+      <td class="cc">${idx + 1}</td>
+      <td class="cc">${fDateStr}</td>
+      <td class="cc">S01-${String(idx+1).padStart(3,'0')}</td>
+      <td>${e.desc}</td>
+      <td>${c.name}</td>
+      <td class="cr">${fmtAmtRaw(e.amt)}</td>
+      <td class="cc">${c.vat}</td>
+      <td class="cc">${c.pit}</td>
+      <td></td>
+    </tr>`;
+  });
+  
+  // Điền nốt hàng trống nếu ít dữ liệu để form chuẩn đẹp A4
+  let minRows = 12;
+  if(filtered.length < minRows) {
+    for(let i = filtered.length; i < minRows; i++) {
+      rowsHtml += `<tr><td class="cc">${i+1}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
     }
+  }
+  
+  let nameHtml = db.config.name ? `<strong>${db.config.name}</strong>` : "........................................................";
+  let taxHtml = db.config.tax ? `<strong>${db.config.tax}</strong>` : "........................................................";
+  let addrHtml = db.config.addr ? `<strong>${db.config.addr}</strong>` : "........................................................";
+  let locHtml = db.config.loc ? `<strong>${db.config.loc}</strong>` : "........................................................";
+  
+  let printHtml = `
+  <div class="ph">
+    <div class="pl">
+      <p>Tên HKD: ${nameHtml}</p>
+      <p>Mã số thuế: ${taxHtml}</p>
+      <p>Địa chỉ HKD: ${addrHtml}</p>
+      <p>Địa điểm KD: ${locHtml}</p>
+    </div>
+    <div class="pr">
+      <div class="mau">Mẫu số S1a - HKD</div>
+      <p>(Ban hành kèm theo Thông tư số 88/2021/TT-BTC<br>ngày 11/10/2021 của Bộ trưởng Bộ Tài chính)</p>
+    </div>
+  </div>
+  
+  <div class="tit">SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ</div>
+  <div class="sub">Tháng ${thg} Năm ${nam}</div>
+  <div class="dvt">Đơn vị tính: Đồng</div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th style="width:5%">STT</th>
+        <th style="width:12%">Ngày ghi sổ</th>
+        <th style="width:12%">Số hiệu Chứng từ</th>
+        <th style="width:25%">Nội dung / Diễn giải</th>
+        <th style="width:20%">Nhóm sản phẩm ngành nghề</th>
+        <th style="width:13%">Doanh thu sản lượng</th>
+        <th style="width:6%">Thuế GTGT (%)</th>
+        <th style="width:6%">Thuế TNCN (%)</th>
+        <th style="width:10%">Ghi chú</th>
+      </tr>
+      <tr style="font-size:10pt; font-style:italic">
+        <th class="cc">A</th><th class="cc">B</th><th class="cc">C</th><th class="cc">D</th><th class="cc">E</th><th class="cc">1</th><th class="cc">2</th><th class="cc">3</th><th class="cc">4</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rowsHtml}
+      <tr class="tot">
+        <td class="cc"></td>
+        <td class="cc">31/${thg}/${nam}</td>
+        <td class="cc"></td>
+        <td>TỔNG CỘNG DOANH THU</td>
+        <td></td>
+        <td class="cr">${fmtAmtRaw(total)}</td>
+        <td class="cc"></td><td class="cc"></td><td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="foot">
+    <p>Ngày ...... tháng ...... năm ......&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+    <strong style="text-transform:uppercase; margin-right:40px">Người lập biểu / Người đại diện HKD</strong>
+    <p style="font-style:italic; opacity:.6; margin-top:2px; margin-right:85px">(Ký, ghi rõ họ tên)</p>
+  </div>`;
+  
+  document.getElementById("printContent").innerHTML = printHtml;
+  document.getElementById("printOverlay").classList.add("on");
+}
 
-    function exportJSON() {
-        const blob = new Blob([JSON.stringify({ cfg: S.cfg, entries: S.entries })], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = `backup_s1a_hkd.json`;
-        a.click();
-    }
+function closePrint() {
+  document.getElementById("printOverlay").classList.remove("on");
+}
 
-    function importJSON(input) {
-        const file = input.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const parsed = JSON.parse(e.target.result);
-                if(parsed.cfg) S.cfg = parsed.cfg;
-                if(parsed.entries) S.entries = parsed.entries;
-                persist(); load(); renderAll(); fillCfgForm();
-                alert('Khôi phục cấu trúc dữ liệu thành công!');
-            } catch (err) { alert('Tệp tin khôi phục không đúng cấu trúc định dạng JSON.'); }
-        };
-        reader.readAsText(file);
-    }
+// ─── TẠO THÔNG BÁO NHẮC THUẾ ───
+function genNoti() {
+  let total = 0;
+  db.entries.forEach(e => total += Number(e.amt));
+  let name = db.config.name || "[Tên Hộ Kinh Doanh]";
+  let tax = db.config.tax || "[Mã Số Thuế]";
+  
+  let msg = `📢 THÔNG BÁO NHẮC LẬP TỜ KHAI THUẾ\n`;
+  msg += `───────────────────────\n`;
+  msg += `🏢 HKD: ${name}\n`;
+  msg += `📌 MST: ${tax}\n`;
+  msg += `📊 Tổng DT tích lũy sổ S1a: ${fmtAmt(total)}\n`;
+  msg += `⏱️ Trạng thái: Sẵn sàng lập tờ khai mẫu 01/CNKD.\n\n`;
+  msg += `💡 Nhắc nhở: Quý khách nhớ rà soát lại hóa đơn đầu ra (nếu có) trước khi nộp tờ khai lên Cơ quan Thuế. Hạn nộp là ngày 31/01.`;
+  
+  const box = document.getElementById("notifBox");
+  box.innerText = msg;
+  box.style.display = "block";
+  document.getElementById("copyBtn").style.display = "block";
+}
 
-    function clearAll() {
-        if (!confirm('Cảnh báo: Thao tác này sẽ xóa sạch toàn bộ cơ sở dữ liệu hiện tại, bạn chắc chứ?')) return;
-        localStorage.removeItem(LS_KEY);
-        S.entries = []; S.cfg = { name:'', addr:'', tax:'', loc:'', method:'old' };
-        renderAll(); fillCfgForm();
-    }
+function copyNoti() {
+  const text = document.getElementById("notifBox").innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast("Đã sao chép vào bộ nhớ tạm!");
+  }).catch(() => {
+    showToast("Lỗi không thể sao chép!");
+  });
+}
 
-    function doPrint() {
-        const mode = document.getElementById('selPrint').value;
-        let pool = S.entries;
-        if (mode !== 'all') {
-            pool = S.entries.filter(e => {
-                const parts = e.date.split('-');
-                return `${parts[1]}/${parts[0]}` === mode;
-            });
-        }
+// ─── UTILS ───
+function fmtAmt(val) {
+  return Number(val).toLocaleString('vi-VN') + " ₫";
+}
+function fmtAmtRaw(val) {
+  if(!val || val === 0) return "-";
+  return Number(val).toLocaleString('vi-VN');
+}
 
-        let totalSum = 0;
-        let rowsHtml = '';
-        pool.sort((a,b)=>a.date.localeCompare(b.date)).forEach((e, idx) => {
-            totalSum += e.amount;
-            const p = e.date.split('-');
-            rowsHtml += `<tr><td class="cc">${idx+1}</td><td class="cc">${p[2]}/${p[1]}/${p[0]}</td><td>${e.desc}</td><td class="cr">${e.amount.toLocaleString('vi-VN')}</td><td></td></tr>`;
-        });
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("on");
+  setTimeout(() => t.classList.remove("on"), 2200);
+}
 
-        document.getElementById('printContent').innerHTML = `
-            <div class="ph">
-                <div class="pl">
-                    <p><strong>Người nộp thuế:</strong> ${S.cfg.name || '...........................................'}</p>
-                    <p><strong>Mã số thuế:</strong> ${S.cfg.tax || '...........................................'}</p>
-                    <p><strong>Địa chỉ:</strong> ${S.cfg.addr || '...........................................'}</p>
-                </div>
-                <div class="pr">
-                    <div class="mau">Mẫu số S1a-HKD</div>
-                    <p>(Ban hành kèm theo Thông tư số 88/2021/TT-BTC)</p>
-                </div>
-            </div>
-            <div class="tity">SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ</div>
-            <div class="cc" style="margin-bottom:15px;">Kỳ báo cáo kết xuất: ${mode==='all'?'Tất cả các kỳ': 'Tháng ' + mode}</div>
-            <table>
-                <thead><tr><th>STT</th><th>Ngày ghi sổ</th><th>Diễn giải nội dung giao dịch</th><th>Doanh thu</th><th>Ký nhận</th></tr></thead>
-                <tbody>
-                    ${rowsHtml || '<tr><td colspan="5" class="cc">Không có phát sinh dữ liệu trong kỳ</td></tr>'}
-                    <tr class="tot"><td colspan="3" class="cc">TỔNG CỘNG DOANH THU PHÁT SINH</td><td class="cr">${totalSum.toLocaleString('vi-VN')} đ</td><td></td></tr>
-                </tbody>
-            </table>
-            <div class="foot">
-                <p style="font-style:italic; margin-bottom: 5px;">Ngày ...... tháng ...... năm 20...</p>
-                <p style="font-weight:bold; text-transform: uppercase;">NGƯỜI ĐẠI DIỆN HỘ KINH DOANH/CÁ NHÂN KINH DOANH</p>
-                <p style="font-style:italic; color:#555;">(Ký, ghi rõ họ tên, đóng dấu (nếu có))</p>
-            </div>`;
-        document.getElementById('printOverlay').classList.add('on');
-    }
-
-    function closePrint() { document.getElementById('printOverlay').classList.remove('on'); }
-
-    window.onload = function() {
-        load();
-        renderAll();
-        fillCfgForm();
-    };
+// Mẹo nhỏ ngẫu nhiên khi bật app
+function checkDailyPopup() {
+  const pop = document.getElementById("dailyPopup");
+  let tips = [
+    "Luôn ghi chép đầy đủ các giao dịch phát sinh hằng ngày để đối chiếu thuế chính xác nhất cuối năm!",
+    "Sổ sách rõ ràng giúp bạn tối ưu chi phí thuế hợp pháp và tránh bị cơ quan kiểm tra phạt chậm nộp.",
+    "Cuối tháng nên xuất một bản file dữ liệu JSON cất vào máy để đề phòng đổi điện thoại không bị mất số liệu."
+  ];
+  let titles = ["Mẹo doanh thu", "Kế toán thông minh", "An toàn dữ liệu"];
+  
+  let r = Math.floor(Math.random() * tips.length);
+  document.getElementById("dpTitle").innerText = titles[r];
+  document.getElementById("dpMsg").innerText = tips[r];
+  
+  setTimeout(() => pop.classList.add("on"), 600);
+}
+function closeDp() {
+  document.getElementById("dailyPopup").classList.remove("on");
+}
 </script>
 </body>
 </html>
