@@ -573,10 +573,6 @@ select.fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       Cài đặt
     </button>
-    <button class="ni" data-tab="sup">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-      Hỗ trợ
-    </button>
   </nav>
 
 </div><!-- end #app -->
@@ -797,13 +793,17 @@ function renderList() {
     const d = new Date(e.date + 'T00:00:00');
     const card = document.createElement('div');
     card.className = 'ec';
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function(ev) {
+      if(ev.target.closest('[data-act]')) return;
+      openEdit(e.id);
+    });
     card.innerHTML =
       '<div class="db">' + String(d.getDate()).padStart(2,'0') + '<div class="dm">T' + (d.getMonth()+1) + '</div></div>' +
       '<div class="ei"><div class="edesc">' + esc(e.desc || '(Không có diễn giải)') + '</div>' +
       '<div class="eamt">' + fmt(e.amt) + '</div></div>' +
       '<div class="ea"><button class="ib" data-id="' + e.id + '" data-act="edit">✏️</button>' +
       '<button class="ib d" data-id="' + e.id + '" data-act="del">🗑️</button></div>';
-    card.addEventListener('dblclick', () => openEdit(e.id));
     el.appendChild(card);
   });
   el.querySelectorAll('[data-act]').forEach(btn => {
@@ -830,6 +830,7 @@ function fillSelects() {
 function openAdd() {
   S.editId = null;
   document.getElementById('mTitle').textContent = '➕ Thêm doanh thu';
+  document.getElementById('amtPrev').textContent = '💡 Chạm giao dịch để sửa nhanh';
   document.getElementById('eDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('eDesc').value = '';
   document.getElementById('eAmt').value = '';
@@ -865,7 +866,7 @@ async function saveEntry() {
   persist();
   closeModal();
   renderAll();
-  toast(S.editId ? '✅ Đã cập nhật giao dịch!' : '✅ Đã thêm doanh thu!');
+  toast(S.editId ? '✅ Đã cập nhật!' : '✅ Đã thêm doanh thu!');
 }
 
 async function delEntry(id) {
